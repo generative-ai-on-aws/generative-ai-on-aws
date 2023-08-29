@@ -1,3 +1,7 @@
+bigscience/
+codeparrot-ds/
+.DS_Store
+output/
 tmp/
 .ipynb_checkpoints/
 __pycache__/
