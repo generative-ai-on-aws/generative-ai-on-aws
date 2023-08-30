@@ -1,0 +1,7 @@
+https://huggingface.co/spaces/Rothfeld/stable-diffusion-mat-outpainting-primer
+
+output size 5
+border 0
+seed 5332
+scale of image 0.5
+model: places2 + laion300k + laion1200k(opmasked)
