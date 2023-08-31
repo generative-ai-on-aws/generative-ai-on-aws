@@ -13,7 +13,7 @@ from datasets import load_from_disk
 import torch
 
 import bitsandbytes as bnb
-from huggingface_hub import login, HfFolder
+#from huggingface_hub import login, HfFolder
 
 
 def parse_arge():
@@ -28,9 +28,9 @@ def parse_arge():
     parser.add_argument(
         "--dataset_path", type=str, default="lm_dataset", help="Path to dataset."
     )
-    parser.add_argument(
-        "--hf_token", type=str, default=HfFolder.get_token(), help="Path to dataset."
-    )
+    # parser.add_argument(
+    #     "--hf_token", type=str, default=HfFolder.get_token(), help="Path to dataset."
+    # )
     # add training hyperparameters for epochs, batch size, learning rate, and seed
     parser.add_argument(
         "--epochs", type=int, default=3, help="Number of epochs to train for."
@@ -67,9 +67,9 @@ def parse_arge():
     )
     args, _ = parser.parse_known_args()
 
-    if args.hf_token:
-        print(f"Logging into the Hugging Face Hub with token {args.hf_token[:10]}...")
-        login(token=args.hf_token)
+    # if args.hf_token:
+    #     print(f"Logging into the Hugging Face Hub with token {args.hf_token[:10]}...")
+    #     login(token=args.hf_token)
 
     return args
 

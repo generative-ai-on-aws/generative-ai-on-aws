@@ -31,13 +31,13 @@ if args.save_tokenizer:
     tokenizer = AutoTokenizer.from_pretrained(args.peft_model_id)
     tokenizer.save_pretrained(args.output_dir)
     
-if args.push_to_hub:
-  if args.repository_id is None:
-    raise ValueError("You must specify a repository id to push to the hub")
-  from huggingface_hub import HfApi
-  api = HfApi()
-  api.upload_folder(
-    folder_path=args.output_dir,
-    repo_id=args.repository_id,
-    repo_type="model",
-  )
+# if args.push_to_hub:
+#   if args.repository_id is None:
+#     raise ValueError("You must specify a repository id to push to the hub")
+#   from huggingface_hub import HfApi
+#   api = HfApi()
+#   api.upload_folder(
+#     folder_path=args.output_dir,
+#     repo_id=args.repository_id,
+#     repo_type="model",
+#   )
