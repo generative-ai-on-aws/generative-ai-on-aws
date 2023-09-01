@@ -1,3 +1,6 @@
+llama2-7b-int4-dolly/
+llama2_dolly/
+merged_model/
 quantized_llama/
 bigscience/
 codeparrot-ds/
