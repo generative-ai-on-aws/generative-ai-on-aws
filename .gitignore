@@ -1,3 +1,7 @@
+llama2_lora_adapter/
+llama2_lora_merged/
+llama2_qlora_adapter/
+llama2_qlora_merged/
 llama2-7b-int4-dolly/
 llama2_dolly/
 merged_model/
