@@ -1,3 +1,7 @@
+faiss_titan_index/
+faiss_claude_index/
+llama_titan_index/
+llama_claude_index/
 __pycache__/
 11_control/ddpo_pytorch.egg-info/
 llama2_lora_adapter/
