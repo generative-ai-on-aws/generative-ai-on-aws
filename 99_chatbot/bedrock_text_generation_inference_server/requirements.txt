@@ -1,0 +1,4 @@
+fastapi
+uvicorn[standard]
+boto3-1.26.140-py3-none-any.whl
+botocore-1.29.140-py3-none-any.whl
