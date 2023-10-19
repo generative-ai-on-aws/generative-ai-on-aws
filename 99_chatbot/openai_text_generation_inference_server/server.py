@@ -43,7 +43,8 @@ class RequestBody(BaseModel):
 
 async def get_openai_stream_data(request):
     events = await openai.ChatCompletion.acreate(
-        model="gpt-3.5-turbo",
+#        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[{"role": "user", "content": request.inputs}],
         stream=True,
         temperature = request.parameters['temperature'] if 'parameters' in request else DEFAULT_TEMPERATURE,
