@@ -42,15 +42,71 @@ sudo systemctl status mongod
 ```
 
 # Setup
-Edit the [](./env.template) file
+Create a `.env.local` file using `.env.template` file.  Below is a portion of the demo's `.env.local` file
+
+```
+MODELS=`[
+  {
+      "name": "Llama2-70b-chat",
+      "endpoints": [
+        {"url": "http://127.0.0.1:8080", "weight": 100}
+      ],
+      "userMessageToken": "",
+      "userMessageEndToken": " [/INST] ",
+      "assistantMessageToken": "",
+      "assistantMessageEndToken": " </s><s>[INST] ",
+      "preprompt": "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.",
+      "chatPromptTemplate" : "<s>[INST] <<SYS>>\n{{preprompt}}\n<</SYS>>\n\n{{#each messages}}{{#ifUser}}{{content}} [/INST] {{/ifUser}}{{#ifAssistant}}{{content}} </s><s>[INST] {{/ifAssistant}}{{/each}}",
+      "parameters": {
+        "temperature": 0.1,
+        "top_p": 0.95,
+        "repetition_penalty": 1.2,
+        "top_k": 50,
+        "truncate": 1000,
+        "max_new_tokens": 1024
+      }
+  },
+  {
+    "name": "Bedrock_Claude",
+    "endpoints": [
+      {"url": "http://127.0.0.1:8070/generate_stream"}
+    ],
+    "userMessageToken": "",
+    "userMessageEndToken": "",
+    "assistantMessageToken": "",
+    "assistantMessageEndToken": "",
+    "preprompt": "You are a helpful assistant.",
+    "chatPromptTemplate": "\n\n{{preprompt}}{{#each messages}}{{#ifUser}}\n\nHuman:{{content}}\nAssistant:{{/ifUser}}{{#ifAssistant}}{{content}}\n\n</s>{{/ifAssistant}}{{/each}}",
+    "parameters": {
+      "temperature": 0.9,
+      "max_new_tokens": 50,
+      "truncate": 1000
+    }
+  },
+  {
+    "name": "ChatGPT",
+    "endpoints": [
+      {"url": "http://127.0.0.1:8060/generate_stream"}
+    ],
+    "userMessageToken": "User: ",
+    "assistantMessageToken": "Assistant: ",
+    "messageEndToken": "\n",
+    "preprompt": "You are a helpful assistant.",
+    "parameters": {
+    "temperature": 0.9,
+    "max_new_tokens": 50,
+    "truncate": 1000
+    }
+  }
+]`
+```
 
 # Start
-Run [](./start-text-generative-inference.sh) to start the model server as a Docker container
+Run `./start-text-generative-inference.sh` to start the model server as a Docker container.
 
-Run [](./start-chat-ui.sh) to start the NodeJS app
+Run `./start-chat-ui.sh` to start the NodeJS app.
 
 # Stop
+Run `./stop-chat-ui.sh` to stop the NodeJS app.
 
-Run [](./stop-chat-ui.sh) to stop the NodeJS app
-
-Run `docker ps` and stop the docker container using the container id.
+Run `docker ps` and stop the model server Docker container using the container id.
