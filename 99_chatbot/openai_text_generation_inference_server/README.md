@@ -1,3 +1,5 @@
+Adapted from here:  https://github.com/gururise/openai_text_generation_inference_server
+
 # HuggingChat with OpenAI Integration
 
 This repository contains code that enables the integration of the [Hugging Chat UI](https://github.com/huggingface/chat-ui) with the OpenAI API. The provided Python FastAPI code allows you to generate chat completions using the OpenAI GPT-3.5-turbo model and stream the results to the Hugging Chat UI in real-time.
