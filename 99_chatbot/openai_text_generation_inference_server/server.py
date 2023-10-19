@@ -22,11 +22,14 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Optional
 from fastapi.responses import StreamingResponse
+from dotenv import load_dotenv
 import json
 import random
 import openai
 import asyncio
 import os
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -40,7 +43,7 @@ class RequestBody(BaseModel):
 
 async def get_openai_stream_data(request):
     events = await openai.ChatCompletion.acreate(
-        model="gpt-3.5-turbo-0301",
+        model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": request.inputs}],
         stream=True,
         temperature = request.parameters['temperature'] if 'parameters' in request else DEFAULT_TEMPERATURE,
@@ -77,7 +80,7 @@ async def get_openai_stream_data(request):
                     "special": special,
                 },
                 "generated_text": final_text,
-                "details":details
+                "details": details
             }
             json_string = json.dumps(tok,separators=(',', ':'))
             result = f"data:{json_string}"
