@@ -102,7 +102,7 @@ MODELS=`[
 ```
 
 # Start
-Run `./start-text-generative-inference.sh` to start the model server as a Docker container.
+Run `./start-local-server.sh` to start the model server as a Docker container.
 
 Run `./start-chat-ui.sh` to start the NodeJS app.
 
