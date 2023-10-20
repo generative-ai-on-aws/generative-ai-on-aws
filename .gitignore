@@ -1,3 +1,4 @@
+peft_ranking_reward_public_qanda/
 faiss_titan_index/
 faiss_claude_index/
 llama_titan_index/
