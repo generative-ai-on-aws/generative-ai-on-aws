@@ -1,0 +1,3 @@
+transformers==4.27.2
+py7zr
+datasets
