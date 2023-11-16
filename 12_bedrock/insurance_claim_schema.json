@@ -1,0 +1,137 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Insurance Claims Automation API",
+        "version": "1.0.0",
+        "description": "APIs for managing insurance claims by pulling a list of open claims, identifying outstanding paperwork for each claim, and sending reminders to policy holders."
+    },
+    "paths": {
+        "/claims": {
+            "get": {
+                "summary": "Get a list of all open claims",
+                "description": "Get the list of all open insurance claims. Return all the open claimIds.",
+                "operationId": "getAllOpenClaims",
+                "responses": {
+                    "200": {
+                        "description": "Gets the list of all open insurance claims for policy holders",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "claimId": {
+                                                "type": "string",
+                                                "description": "Unique ID of the claim."
+                                            },
+                                            "policyHolderId": {
+                                                "type": "string",
+                                                "description": "Unique ID of the policy holder who has filed the claim."
+                                            },
+                                            "claimStatus": {
+                                                "type": "string",
+                                                "description": "The status of the claim. Claim can be in Open or Closed state"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/claims/{claimId}/identify-missing-documents": {
+            "get": {
+                "summary": "Identify missing documents for a specific claim",
+                "description": "Get the list of pending documents that need to be uploaded by policy holder before the claim can be processed. The API takes in only one claim id and returns the list of documents that are pending to be uploaded by policy holder for that claim. This API should be called for each claim id",
+                "operationId": "identifyMissingDocuments",
+                "parameters": [{
+                    "name": "claimId",
+                    "in": "path",
+                    "description": "Unique ID of the open insurance claim",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "List of documents that are pending to be uploaded by policy holder for insurance claim",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "pendingDocuments": {
+                                            "type": "string",
+                                            "description": "The list of pending documents for the claim."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        },
+        "/send-reminders": {
+            "post": {
+                "summary": "API to send reminder to the customer about pending documents for open claim",
+                "description": "Send reminder to the customer about pending documents for open claim. The API takes in only one claim id and its pending documents at a time, sends the reminder and returns the tracking details for the reminder. This API should be called for each claim id you want to send reminders for.",
+                "operationId": "sendReminders",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "claimId": {
+                                        "type": "string",
+                                        "description": "Unique ID of open claims to send reminders for."
+                                    },
+                                    "pendingDocuments": {
+                                        "type": "string",
+                                        "description": "The list of pending documents for the claim."
+                                    }
+                                },
+                                "required": [
+                                    "claimId",
+                                    "pendingDocuments"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reminders sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "sendReminderTrackingId": {
+                                            "type": "string",
+                                            "description": "Unique Id to track the status of the send reminder Call"
+                                        },
+                                        "sendReminderStatus": {
+                                            "type": "string",
+                                            "description": "Status of send reminder notifications"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. One or more required fields are missing or invalid."
+                    }
+                }
+            }
+        }
+    }
+}
