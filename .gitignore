@@ -1,3 +1,9 @@
+dreambooth_lora_model/
+dreambooth_model/
+images_controlnet/
+images_molly/
+molly-dog3.png
+textual_inversion_model/
 peft_ranking_reward_public_qanda/
 faiss_titan_index/
 faiss_claude_index/
