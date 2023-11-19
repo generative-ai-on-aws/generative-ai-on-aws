@@ -12,10 +12,9 @@
 	import { findCurrentModel } from "$lib/utils/models";
 	import { webSearchParameters } from "$lib/stores/webSearchParameters";
 	import type { Message } from "$lib/types/Message";
-	import { PUBLIC_APP_DISCLAIMER } from "$env/static/public";
 	import type { MessageUpdate, WebSearchUpdate } from "$lib/types/MessageUpdate";
 	import titleUpdate from "$lib/stores/titleUpdate";
-
+	import file2base64 from "$lib/utils/file2base64.js";
 	export let data;
 
 	let messages = data.messages;
@@ -32,7 +31,8 @@
 
 	let loading = false;
 	let pending = false;
-	let loginRequired = false;
+
+	let files: File[] = [];
 
 	async function convFromShared() {
 		try {
@@ -81,14 +81,37 @@
 				retryMessageIndex = messages.length;
 			}
 
+			const module = await import("browser-image-resizer");
+
+			// currently, only IDEFICS is supported by TGI
+			// the size of images is hardcoded to 224x224 in TGI
+			// this will need to be configurable when support for more models is added
+			const resizedImages = await Promise.all(
+				files.map(async (file) => {
+					return await module
+						.readAndCompressImage(file, {
+							maxHeight: 224,
+							maxWidth: 224,
+							quality: 1,
+						})
+						.then(async (el) => await file2base64(el as File));
+				})
+			);
+
 			// slice up to the point of the retry
 			messages = [
 				...messages.slice(0, retryMessageIndex),
-				{ from: "user", content: message, id: messageId },
+				{
+					from: "user",
+					content: message,
+					id: messageId,
+					files: isRetry ? messages[retryMessageIndex].files : resizedImages,
+				},
 			];
 
-			const responseId = randomUUID();
+			files = [];
 
+			const responseId = randomUUID();
 			const response = await fetch(`${base}/conversation/${$page.params.id}`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
@@ -98,9 +121,11 @@
 					response_id: responseId,
 					is_retry: isRetry,
 					web_search: $webSearchParameters.useSearch,
+					files: isRetry ? undefined : resizedImages,
 				}),
 			});
 
+			files = [];
 			if (!response.body) {
 				throw new Error("Body not defined");
 			}
@@ -109,6 +134,7 @@
 				error.set((await response.json())?.message);
 				return;
 			}
+
 			// eslint-disable-next-line no-undef
 			const encoder = new TextDecoderStream();
 			const reader = response?.body?.pipeThrough(encoder).getReader();
@@ -145,6 +171,8 @@
 							if (update.type === "finalAnswer") {
 								finalAnswer = update.text;
 								reader.cancel();
+								loading = false;
+								pending = false;
 								invalidate(UrlDependency.Conversation);
 							} else if (update.type === "stream") {
 								pending = false;
@@ -173,7 +201,12 @@
 											convId: $page.params.id,
 										};
 									}
+								} else if (update.status === "error") {
+									$error = update.message ?? "An error has occurred";
 								}
+							} else if (update.type === "error") {
+								error.set(update.message);
+								reader.cancel();
 							}
 						} catch (parseError) {
 							// in case of parsing error we wait for the next message
@@ -233,8 +266,9 @@
 	onMount(async () => {
 		// only used in case of creating new conversations (from the parent POST endpoint)
 		if ($pendingMessage) {
-			await writeMessage($pendingMessage);
-			$pendingMessage = "";
+			files = $pendingMessage.files;
+			await writeMessage($pendingMessage.content);
+			$pendingMessage = undefined;
 		}
 	});
 
@@ -264,14 +298,8 @@
 		}
 	}
 
-	$: $page.params.id, (isAborted = true);
+	$: $page.params.id, ((isAborted = true), (loading = false));
 	$: title = data.conversations.find((conv) => conv.id === $page.params.id)?.title ?? data.title;
-
-	$: loginRequired =
-		(data.requiresLogin
-			? !data.user
-			: !data.settings.ethicsModalAcceptedAt && !!PUBLIC_APP_DISCLAIMER) &&
-		messages.length >= data.messagesBeforeLogin;
 </script>
 
 <svelte:head>
@@ -291,6 +319,7 @@
 	shared={data.shared}
 	preprompt={data.preprompt}
 	bind:webSearchMessages
+	bind:files
 	on:message={onMessage}
 	on:retry={onRetry}
 	on:vote={(event) => voteMessage(event.detail.score, event.detail.id)}
@@ -299,5 +328,4 @@
 	models={data.models}
 	currentModel={findCurrentModel([...data.models, ...data.oldModels], data.model)}
 	settings={data.settings}
-	{loginRequired}
 />

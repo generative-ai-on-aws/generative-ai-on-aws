@@ -8,7 +8,9 @@
 
 docker pull ghcr.io/huggingface/text-generation-inference:latest
 
-nohup docker run --gpus 4 --shm-size 1g -p 8080:80 -v $PWD/data:/data ghcr.io/huggingface/text-generation-inference:latest --model-id h2oai/h2ogpt-4096-llama2-70b-chat --quantize bitsandbytes > nohup-local.out &
+#nohup docker run --gpus 2 --shm-size 1g -p 8080:80 -v $PWD/data:/data ghcr.io/huggingface/text-generation-inference:latest --model-id h2oai/h2ogpt-4096-llama2-13b-chat --quantize bitsandbytes > nohup-local.out &
+
+nohup docker run --gpus 4 --shm-size 1g -p 8081:80 -v $PWD/data:/data ghcr.io/huggingface/text-generation-inference:latest --model-id HuggingFaceM4/idefics-9b-instruct --quantize bitsandbytes > nohup-local.out &
 
 #nohup docker run --gpus 4 --shm-size 1g -p 8081:80 -v $PWD/data:/data ghcr.io/huggingface/text-generation-inference:latest --model-id h2oai/h2ogpt-gm-oasst1-en-2048-falcon-40b-v2 --trust-remote-code --quantize bitsandbytes > nohup-1.out &
 
