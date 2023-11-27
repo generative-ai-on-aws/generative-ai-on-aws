@@ -35,7 +35,7 @@ app = FastAPI()
 
 openai.api_key = os.environ['OPENAI_API_KEY']
 DEFAULT_TEMPERATURE = 0.7
-DEFAULT_MAX_TOKENS = 100
+DEFAULT_MAX_TOKENS = 4096 
 
 class RequestBody(BaseModel):
     inputs: str
@@ -43,8 +43,7 @@ class RequestBody(BaseModel):
 
 async def get_openai_stream_data(request):
     events = await openai.ChatCompletion.acreate(
-#        model="gpt-3.5-turbo",
-        model="gpt-4",
+        model="gpt-4-1106-preview",
         messages=[{"role": "user", "content": request.inputs}],
         stream=True,
         temperature = request.parameters['temperature'] if 'parameters' in request else DEFAULT_TEMPERATURE,

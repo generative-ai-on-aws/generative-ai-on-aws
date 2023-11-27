@@ -45,22 +45,14 @@ content_type = "application/json"
 
 app = FastAPI()
 
-#openai.api_key = os.environ['OPENAI_API_KEY']
 DEFAULT_TEMPERATURE = 0.7
-DEFAULT_MAX_TOKENS = 100
+DEFAULT_MAX_TOKENS = 100000 
 
 class RequestBody(BaseModel):
     inputs: str
     parameters: Optional[dict]
 
 async def get_bedrock_stream_data(request):
-#    events = await openai.ChatCompletion.acreate(
-#        model="gpt-3.5-turbo",
-#        messages=[{"role": "user", "content": request.inputs}],
-#        stream=True,
-#        temperature = request.parameters['temperature'] if 'parameters' in request else DEFAULT_TEMPERATURE,
-#        max_tokens = request.parameters['max_tokens'] if 'parameters' in request else DEFAULT_MAX_TOKENS,
-#        )
     max_tokens = request.parameters['max_tokens'] if 'parameters' in request else DEFAULT_MAX_TOKENS
     temperature = request.parameters['temperature'] if 'parameters' in request else DEFAULT_TEMPERATURE
 
@@ -72,7 +64,6 @@ async def get_bedrock_stream_data(request):
       }
     )
 
-#    try:
     response = bedrock.invoke_model_with_response_stream(
       body=body, 
       modelId=model_id, 
@@ -81,26 +72,6 @@ async def get_bedrock_stream_data(request):
     )
         
     events = response.get('body')
-#    output = []
-
-#      for event in events:
-#            chunk = event.get('chunk')
-#            if chunk:
-#                chunk_obj = json.loads(chunk.get('bytes').decode())
-#                text = chunk_obj['completion']
-#                clear_output(wait=True)
-#                output.append(text)
-#                display_markdown(Markdown(''.join(output)))
-#            
-#    except botocore.exceptions.ClientError as error:
-#      if error.response['Error']['Code'] == 'AccessDeniedException':
-#        print(f"\x1b[41m{error.response['Error']['Message']}\
-#                \nTo troubeshoot this issue please refer to the following resources.\
-#                 \nhttps://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_access-denied.html\
-#                 \nhttps://docs.aws.amazon.com/bedrock/latest/userguide/security-iam.html\x1b[0m\n")
-#        
-#      else:
-#        raise error
 
     gen_text = ""
     end = "\n\n"
@@ -111,16 +82,13 @@ async def get_bedrock_stream_data(request):
         print(event)
         chunk = event.get('chunk')
         try:      
-#            content = event['choices'][0]['delta']['content']
             chunk_obj = json.loads(chunk.get('bytes').decode())
             content = chunk_obj['completion']
             finish_reason = chunk_obj['stop_reason']
         except KeyError:
             content = None
-#        finish_reason = event['choices'][0]['finish_reason']
         tok_cnt += 1
         if content: # or finish_reason != None:
-#            if content:
             gen_text += content
             final_text = None
             details = None
