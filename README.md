@@ -14,3 +14,8 @@
 * Chapter 10 - Multimodal Foundation Models
 * Chapter 11 - Controlled Generation and Fine-Tuning with Stable Diffusion
 * Chapter 12 - Amazon Bedrock Managed Service for Generative AI
+
+# Related Resources
+* YouTube Channel: https://youtube.generativeaionaws.com
+* Generative AI on AWS Meetup (Global, Virtual): https://meetup.generativeaionaws.com
+* Data Science on AWS O'Reilly Book: https://www.amazon.com/Data-Science-AWS-End-End/dp/1492079391/
