@@ -18,4 +18,5 @@
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com
 * Generative AI on AWS Meetup (Global, Virtual): https://meetup.generativeaionaws.com
+* Generative AI on AWS O'Reilly Book: https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/
 * Data Science on AWS O'Reilly Book: https://www.amazon.com/Data-Science-AWS-End-End/dp/1492079391/
