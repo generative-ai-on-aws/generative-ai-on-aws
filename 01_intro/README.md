@@ -1,9 +1,9 @@
 # [Generative AI on AWS](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/) - O'Reilly Book
-
 [![](img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
+# Chapter 1: Generative AI Use Cases, Fundamentals, and Project Life Cycle
+
 # Questions and Answers
-## Chapter 1: Generative AI Use Cases, Fundamentals, and Project Life Cycle
 
 Q: What are some common use cases for Generative AI?
 
