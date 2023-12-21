@@ -1,9 +1,11 @@
 # [Generative AI on AWS](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/) by O'Reilly Media
 
-Authors:  
-* [Chris Fregly](https://www.linkedin.com/in/cfregly/)
-* [Antje Barth](https://www.linkedin.com/cin/antje-barth/)
-* [Shelbee Eigenbrode](https://www.linkedin.com/cin/shelbee-eigenbrode/)
+## Authors
+[Chris Fregly](https://www.linkedin.com/in/cfregly/)
+
+[Antje Barth](https://www.linkedin.com/cin/antje-barth/)
+
+[Shelbee Eigenbrode](https://www.linkedin.com/cin/shelbee-eigenbrode/)
 
 [![](img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
