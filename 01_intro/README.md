@@ -6,6 +6,7 @@
 ## Chapter 1: Generative AI Use Cases, Fundamentals, and Project Life Cycle 
 
 Q: What are some common use cases for Generative AI?
+
 A: Intelligent search, automated customer-support chatbots, dialog summarization, not-safe-for-work (NSFW) content moderation, personalized product videos, source code generation, and others.
 
 Q: How do project life cycle phases impact Generative AI development?
