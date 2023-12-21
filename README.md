@@ -2,7 +2,7 @@
 
 [![](img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-* Chapter 1 - Generative AI Use Cases, Fundamentals, Project Lifecycle
+* [Chapter 1](/ch1) - Generative AI Use Cases, Fundamentals, Project Lifecycle
 * Chapter 2 - Prompt Engineering and In-Context Learning
 * Chapter 3 - Large-Language Foundation Models
 * Chapter 4 - Quantization and Distributed Computing
