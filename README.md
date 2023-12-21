@@ -2,31 +2,18 @@
 
 [![](img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-/01_intro/
-/02_prompt/
-/03_foundation/
-/04_optimize/
-/05_finetune/
-/06_peft/
-/07_rlhf/
-/08_deploy/
-/09_rag/
-/10_multimodal/
-/11_stablediffusion/
-/12_bedrock/
-
 * [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
 * [Chapter 2](/02_prompt) - Prompt Engineering and In-Context Learning
-* Chapter 3 - Large-Language Foundation Models
-* Chapter 4 - Quantization and Distributed Computing
-* Chapter 5 - Fine-Tuning and Evaluation
-* Chapter 6 - Parameter-efficient Fine Tuning (PEFT)
-* Chapter 7 - Fine-tuning using Reinforcement Learning with RLHF
-* Chapter 8 - Optimize and Deploy Generative AI Applications
-* Chapter 9 - Retrieval Augmented Generation (RAG) and Agents
-* Chapter 10 - Multimodal Foundation Models
-* Chapter 11 - Controlled Generation and Fine-Tuning with Stable Diffusion
-* Chapter 12 - Amazon Bedrock Managed Service for Generative AI
+* [Chapter 3](/03_foundation) - Large-Language Foundation Models
+* [Chapter 4](/04_optimize) - Quantization and Distributed Computing
+* [Chapter 5](/05_finetune) - Fine-Tuning and Evaluation
+* [Chapter 6](/06_peft) - Parameter-efficient Fine Tuning (PEFT)
+* [Chapter 7](/07_rlhf) - Fine-tuning using Reinforcement Learning with RLHF
+* [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
+* [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
+* [Chapter 10](/10_multimodal) - Multimodal Foundation Models
+* [Chapter 11](/11_stablediffusion) - Controlled Generation and Fine-Tuning with Stable Diffusion
+* [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com
