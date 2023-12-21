@@ -3,7 +3,7 @@
 
 # Questions and Answers
 
-Q: What are some common use cases for Generative AI?
+_Q: What are some common use cases for Generative AI?_
 
 A: Intelligent search, automated customer-support chatbots, dialog summarization, not-safe-for-work (NSFW) content moderation, personalized product videos, source code generation, and others.
 
