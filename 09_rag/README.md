@@ -50,7 +50,7 @@ A: Effective strategies include using algorithms that prioritize relevance and d
 * [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
 * [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
 * [Chapter 10](/10_multimodal) - Multimodal Foundation Models
-* [Chapter 11](/11_stablediffusion) - Controlled Generation and Fine-Tuning with Stable Diffusion
+* [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
 * [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
 
 # Related Resources
