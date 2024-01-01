@@ -1,3 +1,4 @@
+dolly_mixtral_finetune/
 template.json
 continued_pretraining.jsonl
 logs/
