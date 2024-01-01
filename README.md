@@ -3,9 +3,9 @@
 ## Authors
 [Chris Fregly](https://www.linkedin.com/in/cfregly/)
 
-[Antje Barth](https://www.linkedin.com/cin/antje-barth/)
+[Antje Barth](https://www.linkedin.com/in/antje-barth/)
 
-[Shelbee Eigenbrode](https://www.linkedin.com/cin/shelbee-eigenbrode/)
+[Shelbee Eigenbrode](https://www.linkedin.com/in/shelbee-eigenbrode/)
 
 [![](img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
