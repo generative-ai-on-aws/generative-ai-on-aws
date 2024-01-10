@@ -1,12 +1,5 @@
 # [Generative AI on AWS](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/) by O'Reilly Media
 
-## Authors
-[Chris Fregly](https://www.linkedin.com/in/cfregly/)
-
-[Antje Barth](https://www.linkedin.com/in/antje-barth/)
-
-[Shelbee Eigenbrode](https://www.linkedin.com/in/shelbee-eigenbrode/)
-
 [![](img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
 * [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
@@ -21,6 +14,11 @@
 * [Chapter 10](/10_multimodal) - Multimodal Foundation Models
 * [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
 * [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
+
+## Authors
+* [Chris Fregly](https://www.linkedin.com/in/cfregly/)
+* [Antje Barth](https://www.linkedin.com/in/antje-barth/)
+* [Shelbee Eigenbrode](https://www.linkedin.com/in/shelbee-eigenbrode/)
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com
