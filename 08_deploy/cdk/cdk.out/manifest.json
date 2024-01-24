@@ -1,0 +1,137 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "sagemaker-endpoint.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "sagemaker-endpoint.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "sagemaker-endpoint": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "sagemaker-endpoint.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/f72956c795480fda629c60624aae5250e0113f46bb3d70cad284bc712cf6adef.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "sagemaker-endpoint.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "sagemaker-endpoint.assets"
+      ],
+      "metadata": {
+        "/sagemaker-endpoint/model": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "model"
+          }
+        ],
+        "/sagemaker-endpoint/task": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "task"
+          }
+        ],
+        "/sagemaker-endpoint/instance_type": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "instancetype"
+          }
+        ],
+        "/sagemaker-endpoint/hf_sagemaker_execution_role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "hfsagemakerexecutionrole6481FA1C"
+          }
+        ],
+        "/sagemaker-endpoint/hf_sagemaker_execution_role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "hfsagemakerexecutionroleDefaultPolicyC67188A8"
+          }
+        ],
+        "/sagemaker-endpoint/hf_model": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "hfmodel"
+          }
+        ],
+        "/sagemaker-endpoint/hf_endpoint_config": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "hfendpointconfig"
+          }
+        ],
+        "/sagemaker-endpoint/hf_endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "hfendpoint"
+          }
+        ],
+        "/sagemaker-endpoint/ScalableTarget/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScalableTargetRole53C0666F"
+          }
+        ],
+        "/sagemaker-endpoint/ScalableTarget/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScalableTarget07F0A026"
+          }
+        ],
+        "/sagemaker-endpoint/ScalableTarget/ScaleToTrackMetric/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScalableTargetScaleToTrackMetricF3CE9323"
+          }
+        ],
+        "/sagemaker-endpoint/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/sagemaker-endpoint/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/sagemaker-endpoint/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/sagemaker-endpoint/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "sagemaker-endpoint"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
