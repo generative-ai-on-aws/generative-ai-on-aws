@@ -1,5 +1,5 @@
 import { Issuer, BaseClient, type UserinfoResponse, TokenSet, custom } from "openid-client";
-import { addHours, addYears } from "date-fns";
+import { addHours, addWeeks } from "date-fns";
 import {
 	COOKIE_NAME,
 	OPENID_CLIENT_ID,
@@ -14,6 +14,8 @@ import { sha256 } from "$lib/utils/sha256";
 import { z } from "zod";
 import { dev } from "$app/environment";
 import type { Cookies } from "@sveltejs/kit";
+import { collections } from "./database";
+import JSON5 from "json5";
 
 export interface OIDCSettings {
 	redirectURI: string;
@@ -39,7 +41,7 @@ const OIDConfig = z
 		TOLERANCE: stringWithDefault(OPENID_TOLERANCE),
 		RESOURCE: stringWithDefault(OPENID_RESOURCE),
 	})
-	.parse(JSON.parse(OPENID_CONFIG));
+	.parse(JSON5.parse(OPENID_CONFIG));
 
 export const requiresUser = !!OIDConfig.CLIENT_ID && !!OIDConfig.CLIENT_SECRET;
 
@@ -50,10 +52,19 @@ export function refreshSessionCookie(cookies: Cookies, sessionId: string) {
 		sameSite: dev ? "lax" : "none",
 		secure: !dev,
 		httpOnly: true,
-		expires: addYears(new Date(), 1),
+		expires: addWeeks(new Date(), 2),
 	});
 }
 
+export async function findUser(sessionId: string) {
+	const session = await collections.sessions.findOne({ sessionId });
+
+	if (!session) {
+		return null;
+	}
+
+	return await collections.users.findOne({ _id: session.userId });
+}
 export const authCondition = (locals: App.Locals) => {
 	return locals.user
 		? { userId: locals.user._id }

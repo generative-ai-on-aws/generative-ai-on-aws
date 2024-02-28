@@ -5,14 +5,13 @@ import { z } from "zod";
 import endpointAws, { endpointAwsParametersSchema } from "./aws/endpointAws";
 import { endpointOAIParametersSchema, endpointOai } from "./openai/endpointOai";
 import endpointLlamacpp, { endpointLlamacppParametersSchema } from "./llamacpp/endpointLlamacpp";
+import endpointOllama, { endpointOllamaParametersSchema } from "./ollama/endpointOllama";
 
 // parameters passed when generating text
-interface EndpointParameters {
-	conversation: {
-		messages: Omit<Conversation["messages"][0], "id">[];
-		preprompt?: Conversation["preprompt"];
-		_id?: Conversation["_id"];
-	};
+export interface EndpointParameters {
+	messages: Omit<Conversation["messages"][0], "id">[];
+	preprompt?: Conversation["preprompt"];
+	continueMessage?: boolean; // used to signal that the last message will be extended
 }
 
 interface CommonEndpoint {
@@ -32,6 +31,7 @@ export const endpoints = {
 	aws: endpointAws,
 	openai: endpointOai,
 	llamacpp: endpointLlamacpp,
+	ollama: endpointOllama,
 };
 
 export const endpointSchema = z.discriminatedUnion("type", [
@@ -39,5 +39,6 @@ export const endpointSchema = z.discriminatedUnion("type", [
 	endpointOAIParametersSchema,
 	endpointTgiParametersSchema,
 	endpointLlamacppParametersSchema,
+	endpointOllamaParametersSchema,
 ]);
 export default endpoints;

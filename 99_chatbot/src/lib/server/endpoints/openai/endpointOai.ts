@@ -14,14 +14,15 @@ export const endpointOAIParametersSchema = z.object({
 	completion: z
 		.union([z.literal("completions"), z.literal("chat_completions")])
 		.default("chat_completions"),
+	defaultHeaders: z.record(z.string()).optional(),
+	defaultQuery: z.record(z.string()).optional(),
 });
 
-export async function endpointOai({
-	baseURL,
-	apiKey,
-	completion,
-	model,
-}: z.infer<typeof endpointOAIParametersSchema>): Promise<Endpoint> {
+export async function endpointOai(
+	input: z.input<typeof endpointOAIParametersSchema>
+): Promise<Endpoint> {
+	const { baseURL, apiKey, completion, model, defaultHeaders, defaultQuery } =
+		endpointOAIParametersSchema.parse(input);
 	let OpenAI;
 	try {
 		OpenAI = (await import("openai")).OpenAI;
@@ -31,20 +32,24 @@ export async function endpointOai({
 
 	const openai = new OpenAI({
 		apiKey: apiKey ?? "sk-",
-		baseURL: baseURL,
+		baseURL,
+		defaultHeaders,
+		defaultQuery,
 	});
 
 	if (completion === "completions") {
-		return async ({ conversation }) => {
+		return async ({ messages, preprompt, continueMessage }) => {
+			const prompt = await buildPrompt({
+				messages,
+				continueMessage,
+				preprompt,
+				model,
+			});
+
 			return openAICompletionToTextGenerationStream(
 				await openai.completions.create({
 					model: model.id ?? model.name,
-					prompt: await buildPrompt({
-						messages: conversation.messages,
-						webSearch: conversation.messages[conversation.messages.length - 1].webSearch,
-						preprompt: conversation.preprompt,
-						model,
-					}),
+					prompt,
 					stream: true,
 					max_tokens: model.parameters?.max_new_tokens,
 					stop: model.parameters?.stop,
@@ -55,18 +60,20 @@ export async function endpointOai({
 			);
 		};
 	} else if (completion === "chat_completions") {
-		return async ({ conversation }) => {
-			const messages = conversation.messages.map((message) => ({
+		return async ({ messages, preprompt }) => {
+			let messagesOpenAI = messages.map((message) => ({
 				role: message.from,
 				content: message.content,
 			}));
 
+			if (messagesOpenAI?.[0]?.role !== "system") {
+				messagesOpenAI = [{ role: "system", content: preprompt ?? "" }, ...messagesOpenAI];
+			}
+
 			return openAIChatToTextGenerationStream(
 				await openai.chat.completions.create({
 					model: model.id ?? model.name,
-					messages: conversation.preprompt
-						? [{ role: "system", content: conversation.preprompt }, ...messages]
-						: messages,
+					messages: messagesOpenAI,
 					stream: true,
 					max_tokens: model.parameters?.max_new_tokens,
 					stop: model.parameters?.stop,

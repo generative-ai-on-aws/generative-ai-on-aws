@@ -1,10 +1,20 @@
-import { HF_ACCESS_TOKEN, HF_API_ROOT, MODELS, OLD_MODELS, TASK_MODEL } from "$env/static/private";
+import {
+	HF_TOKEN,
+	HF_API_ROOT,
+	MODELS,
+	OLD_MODELS,
+	TASK_MODEL,
+	HF_ACCESS_TOKEN,
+} from "$env/static/private";
 import type { ChatTemplateInput } from "$lib/types/Template";
 import { compileTemplate } from "$lib/utils/template";
 import { z } from "zod";
 import endpoints, { endpointSchema, type Endpoint } from "./endpoints/endpoints";
 import endpointTgi from "./endpoints/tgi/endpointTgi";
 import { sum } from "$lib/utils/sum";
+import { embeddingModels, validateEmbeddingModelByName } from "./embeddingModels";
+
+import JSON5 from "json5";
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
@@ -12,9 +22,10 @@ const modelConfig = z.object({
 	/** Used as an identifier in DB */
 	id: z.string().optional(),
 	/** Used to link to the model page, and for inference */
-	name: z.string().min(1),
+	name: z.string().default(""),
 	displayName: z.string().min(1).optional(),
 	description: z.string().min(1).optional(),
+	logoUrl: z.string().url().optional(),
 	websiteUrl: z.string().url().optional(),
 	modelUrl: z.string().url().optional(),
 	datasetName: z.string().min(1).optional(),
@@ -47,9 +58,9 @@ const modelConfig = z.object({
 	endpoints: z.array(endpointSchema).optional(),
 	parameters: z
 		.object({
-			temperature: z.number().min(0).max(1),
-			truncate: z.number().int().positive(),
-			max_new_tokens: z.number().int().positive(),
+			temperature: z.number().min(0).max(1).optional(),
+			truncate: z.number().int().positive().optional(),
+			max_new_tokens: z.number().int().positive().optional(),
 			stop: z.array(z.string()).optional(),
 			top_p: z.number().positive().optional(),
 			top_k: z.number().positive().optional(),
@@ -58,9 +69,11 @@ const modelConfig = z.object({
 		.passthrough()
 		.optional(),
 	multimodal: z.boolean().default(false),
+	unlisted: z.boolean().default(false),
+	embeddingModel: validateEmbeddingModelByName(embeddingModels).optional(),
 });
 
-const modelsRaw = z.array(modelConfig).parse(JSON.parse(MODELS));
+const modelsRaw = z.array(modelConfig).parse(JSON5.parse(MODELS));
 
 const processModel = async (m: z.infer<typeof modelConfig>) => ({
 	...m,
@@ -80,7 +93,7 @@ const addEndpoint = (m: Awaited<ReturnType<typeof processModel>>) => ({
 			return endpointTgi({
 				type: "tgi",
 				url: `${HF_API_ROOT}/${m.name}`,
-				accessToken: HF_ACCESS_TOKEN,
+				accessToken: HF_TOKEN ?? HF_ACCESS_TOKEN,
 				weight: 1,
 				model: m,
 			});
@@ -92,17 +105,21 @@ const addEndpoint = (m: Awaited<ReturnType<typeof processModel>>) => ({
 		for (const endpoint of m.endpoints) {
 			if (random < endpoint.weight) {
 				const args = { ...endpoint, model: m };
-				if (args.type === "tgi") {
-					return endpoints.tgi(args);
-				} else if (args.type === "aws") {
-					return await endpoints.aws(args);
-				} else if (args.type === "openai") {
-					return await endpoints.openai(args);
-				} else if (args.type === "llamacpp") {
-					return await endpoints.llamacpp(args);
-				} else {
-					// for legacy reason
-					return await endpoints.tgi(args);
+
+				switch (args.type) {
+					case "tgi":
+						return endpoints.tgi(args);
+					case "aws":
+						return await endpoints.aws(args);
+					case "openai":
+						return await endpoints.openai(args);
+					case "llamacpp":
+						return endpoints.llamacpp(args);
+					case "ollama":
+						return endpoints.ollama(args);
+					default:
+						// for legacy reason
+						return endpoints.tgi(args);
 				}
 			}
 			random -= endpoint.weight;
@@ -126,7 +143,7 @@ export const oldModels = OLD_MODELS
 					displayName: z.string().min(1).optional(),
 				})
 			)
-			.parse(JSON.parse(OLD_MODELS))
+			.parse(JSON5.parse(OLD_MODELS))
 			.map((m) => ({ ...m, id: m.id || m.name, displayName: m.displayName || m.name }))
 	: [];
 
@@ -135,14 +152,17 @@ export const validateModel = (_models: BackendModel[]) => {
 	return z.enum([_models[0].id, ..._models.slice(1).map((m) => m.id)]);
 };
 
-// if `TASK_MODEL` is the name of a model we use it, else we try to parse `TASK_MODEL` as a model config itself
+// if `TASK_MODEL` is string & name of a model in `MODELS`, then we use `MODELS[TASK_MODEL]`, else we try to parse `TASK_MODEL` as a model config itself
 
 export const smallModel = TASK_MODEL
 	? (models.find((m) => m.name === TASK_MODEL) ||
-			(await processModel(modelConfig.parse(JSON.parse(TASK_MODEL))).then((m) =>
+			(await processModel(modelConfig.parse(JSON5.parse(TASK_MODEL))).then((m) =>
 				addEndpoint(m)
 			))) ??
 	  defaultModel
 	: defaultModel;
 
-export type BackendModel = Optional<typeof defaultModel, "preprompt" | "parameters" | "multimodal">;
+export type BackendModel = Optional<
+	typeof defaultModel,
+	"preprompt" | "parameters" | "multimodal" | "unlisted"
+>;

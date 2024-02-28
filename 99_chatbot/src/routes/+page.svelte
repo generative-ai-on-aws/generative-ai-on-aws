@@ -5,23 +5,44 @@
 	import ChatWindow from "$lib/components/chat/ChatWindow.svelte";
 	import { ERROR_MESSAGES, error } from "$lib/stores/errors";
 	import { pendingMessage } from "$lib/stores/pendingMessage";
+	import { useSettingsStore } from "$lib/stores/settings.js";
 	import { findCurrentModel } from "$lib/utils/models";
 
 	export let data;
 	let loading = false;
 	let files: File[] = [];
 
+	const settings = useSettingsStore();
+
 	async function createConversation(message: string) {
 		try {
 			loading = true;
+
+			// check if $settings.activeModel is a valid model
+			// else check if it's an assistant, and use that model
+			// else use the first model
+
+			const validModels = data.models.map((model) => model.id);
+
+			let model;
+			if (validModels.includes($settings.activeModel)) {
+				model = $settings.activeModel;
+			} else {
+				if (validModels.includes(data.assistant?.modelId)) {
+					model = data.assistant?.modelId;
+				} else {
+					model = data.models[0].id;
+				}
+			}
 			const res = await fetch(`${base}/conversation`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					model: data.settings.activeModel,
-					preprompt: data.settings.customPrompts[data.settings.activeModel],
+					model,
+					preprompt: $settings.customPrompts[$settings.activeModel],
+					assistantId: data.assistant?._id,
 				}),
 			});
 
@@ -57,8 +78,8 @@
 <ChatWindow
 	on:message={(ev) => createConversation(ev.detail)}
 	{loading}
-	currentModel={findCurrentModel([...data.models, ...data.oldModels], data.settings.activeModel)}
+	assistant={data.assistant}
+	currentModel={findCurrentModel([...data.models, ...data.oldModels], $settings.activeModel)}
 	models={data.models}
-	settings={data.settings}
 	bind:files
 />
