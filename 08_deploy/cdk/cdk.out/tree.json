@@ -1,0 +1,457 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "sagemaker-endpoint": {
+        "id": "sagemaker-endpoint",
+        "path": "sagemaker-endpoint",
+        "children": {
+          "model": {
+            "id": "model",
+            "path": "sagemaker-endpoint/model",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.122.0"
+            }
+          },
+          "task": {
+            "id": "task",
+            "path": "sagemaker-endpoint/task",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.122.0"
+            }
+          },
+          "instance_type": {
+            "id": "instance_type",
+            "path": "sagemaker-endpoint/instance_type",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.122.0"
+            }
+          },
+          "hf_sagemaker_execution_role": {
+            "id": "hf_sagemaker_execution_role",
+            "path": "sagemaker-endpoint/hf_sagemaker_execution_role",
+            "children": {
+              "Importhf_sagemaker_execution_role": {
+                "id": "Importhf_sagemaker_execution_role",
+                "path": "sagemaker-endpoint/hf_sagemaker_execution_role/Importhf_sagemaker_execution_role",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.122.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "sagemaker-endpoint/hf_sagemaker_execution_role/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "sagemaker.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.122.0"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "sagemaker-endpoint/hf_sagemaker_execution_role/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "sagemaker-endpoint/hf_sagemaker_execution_role/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "sagemaker:*",
+                                "ecr:GetDownloadUrlForLayer",
+                                "ecr:BatchGetImage",
+                                "ecr:BatchCheckLayerAvailability",
+                                "ecr:GetAuthorizationToken",
+                                "cloudwatch:PutMetricData",
+                                "cloudwatch:GetMetricData",
+                                "cloudwatch:GetMetricStatistics",
+                                "cloudwatch:ListMetrics",
+                                "logs:CreateLogGroup",
+                                "logs:CreateLogStream",
+                                "logs:DescribeLogStreams",
+                                "logs:PutLogEvents",
+                                "logs:GetLogEvents",
+                                "s3:CreateBucket",
+                                "s3:ListBucket",
+                                "s3:GetBucketLocation",
+                                "s3:GetObject",
+                                "s3:PutObject"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "*"
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "hfsagemakerexecutionroleDefaultPolicyC67188A8",
+                        "roles": [
+                          {
+                            "Ref": "hfsagemakerexecutionrole6481FA1C"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.122.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.122.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.122.0"
+            }
+          },
+          "hf_model": {
+            "id": "hf_model",
+            "path": "sagemaker-endpoint/hf_model",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::SageMaker::Model",
+              "aws:cdk:cloudformation:props": {
+                "executionRoleArn": {
+                  "Fn::GetAtt": [
+                    "hfsagemakerexecutionrole6481FA1C",
+                    "Arn"
+                  ]
+                },
+                "modelName": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "model-",
+                      {
+                        "Ref": "model"
+                      }
+                    ]
+                  ]
+                },
+                "primaryContainer": {
+                  "environment": {
+                    "HF_MODEL_ID": {
+                      "Ref": "model"
+                    },
+                    "HF_TASK": {
+                      "Ref": "task"
+                    }
+                  },
+                  "image": "763104351884.dkr.ecr.us-east-1.amazonaws.com/huggingface-pytorch-inference:1.8.1-transformers4.10.2-cpu-py36-ubuntu18.04"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_sagemaker.CfnModel",
+              "version": "2.122.0"
+            }
+          },
+          "hf_endpoint_config": {
+            "id": "hf_endpoint_config",
+            "path": "sagemaker-endpoint/hf_endpoint_config",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::SageMaker::EndpointConfig",
+              "aws:cdk:cloudformation:props": {
+                "endpointConfigName": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "config-",
+                      {
+                        "Ref": "model"
+                      }
+                    ]
+                  ]
+                },
+                "productionVariants": [
+                  {
+                    "variantName": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "model-",
+                          {
+                            "Ref": "model"
+                          }
+                        ]
+                      ]
+                    },
+                    "initialInstanceCount": 1,
+                    "initialVariantWeight": 1,
+                    "instanceType": {
+                      "Ref": "instancetype"
+                    },
+                    "modelName": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "model-",
+                          {
+                            "Ref": "model"
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_sagemaker.CfnEndpointConfig",
+              "version": "2.122.0"
+            }
+          },
+          "hf_endpoint": {
+            "id": "hf_endpoint",
+            "path": "sagemaker-endpoint/hf_endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::SageMaker::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointConfigName": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "config-",
+                      {
+                        "Ref": "model"
+                      }
+                    ]
+                  ]
+                },
+                "endpointName": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "endpoint-",
+                      {
+                        "Ref": "model"
+                      }
+                    ]
+                  ]
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_sagemaker.CfnEndpoint",
+              "version": "2.122.0"
+            }
+          },
+          "ScalableTarget": {
+            "id": "ScalableTarget",
+            "path": "sagemaker-endpoint/ScalableTarget",
+            "children": {
+              "Role": {
+                "id": "Role",
+                "path": "sagemaker-endpoint/ScalableTarget/Role",
+                "children": {
+                  "ImportRole": {
+                    "id": "ImportRole",
+                    "path": "sagemaker-endpoint/ScalableTarget/Role/ImportRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.122.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "sagemaker-endpoint/ScalableTarget/Role/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "application-autoscaling.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.122.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.122.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "sagemaker-endpoint/ScalableTarget/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApplicationAutoScaling::ScalableTarget",
+                  "aws:cdk:cloudformation:props": {
+                    "maxCapacity": 2,
+                    "minCapacity": 1,
+                    "resourceId": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "endpoint/endpoint-",
+                          {
+                            "Ref": "model"
+                          },
+                          "/variant/model-",
+                          {
+                            "Ref": "model"
+                          }
+                        ]
+                      ]
+                    },
+                    "roleArn": {
+                      "Fn::GetAtt": [
+                        "ScalableTargetRole53C0666F",
+                        "Arn"
+                      ]
+                    },
+                    "scalableDimension": "sagemaker:variant:DesiredInstanceCount",
+                    "serviceNamespace": "sagemaker"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_applicationautoscaling.CfnScalableTarget",
+                  "version": "2.122.0"
+                }
+              },
+              "ScaleToTrackMetric": {
+                "id": "ScaleToTrackMetric",
+                "path": "sagemaker-endpoint/ScalableTarget/ScaleToTrackMetric",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "sagemaker-endpoint/ScalableTarget/ScaleToTrackMetric/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyName": "sagemakerendpointScalableTargetScaleToTrackMetricAC5CFAA0",
+                        "policyType": "TargetTrackingScaling",
+                        "scalingTargetId": {
+                          "Ref": "ScalableTarget07F0A026"
+                        },
+                        "targetTrackingScalingPolicyConfiguration": {
+                          "predefinedMetricSpecification": {
+                            "predefinedMetricType": "SageMakerVariantInvocationsPerInstance"
+                          },
+                          "scaleInCooldown": 1500,
+                          "scaleOutCooldown": 1500,
+                          "targetValue": 500
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_applicationautoscaling.CfnScalingPolicy",
+                      "version": "2.122.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_applicationautoscaling.TargetTrackingScalingPolicy",
+                  "version": "2.122.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_applicationautoscaling.ScalableTarget",
+              "version": "2.122.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "sagemaker-endpoint/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "sagemaker-endpoint/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.122.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "sagemaker-endpoint/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "version": "2.122.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "sagemaker-endpoint/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.122.0"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "sagemaker-endpoint/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.122.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.122.0"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.3.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.122.0"
+    }
+  }
+}

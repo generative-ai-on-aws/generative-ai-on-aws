@@ -1,0 +1,19 @@
+{
+  "version": "36.0.0",
+  "files": {
+    "f72956c795480fda629c60624aae5250e0113f46bb3d70cad284bc712cf6adef": {
+      "source": {
+        "path": "sagemaker-endpoint.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "f72956c795480fda629c60624aae5250e0113f46bb3d70cad284bc712cf6adef.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
