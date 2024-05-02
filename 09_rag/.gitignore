@@ -1,3 +1,4 @@
+.cache/
 data/
 dependencies/
 `.ipynb_checkpoints/
