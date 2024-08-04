@@ -8,7 +8,7 @@ import warnings
 import requests
 import json
 
-# Initailize global variables
+# 전역 변수 초기화하기
 _ = load_dotenv(find_dotenv())
 # warnings.filterwarnings('ignore')
 url = f"{os.getenv('DLAI_TOGETHER_API_BASE', 'https://api.together.xyz')}/inference"
@@ -37,8 +37,8 @@ def llama_guard(query,
         print(f"model: {model}")
         print("Input is wrapped in [INST] [/INST] tags")
 
-    # Allow multiple attempts to call the API incase of downtime.
-    # Return provided response to user after 3 failed attempts.
+    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용합니다.
+    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환합니다.
     wait_seconds = [base**i for i in range(max_tries)]
 
     for num_tries in range(max_tries):
@@ -84,8 +84,8 @@ def safe_llama(query, add_inst=True,
       "safety_model": safety_model
     }
 
-    # Allow multiple attempts to call the API incase of downtime.
-    # Return provided response to user after 3 failed attempts.
+    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용합니다.
+    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환합니다.
     wait_seconds = [base**i for i in range(max_tries)]
 
     for num_tries in range(max_tries):
@@ -132,8 +132,8 @@ def code_llama(prompt,
             "max_tokens": max_tokens
         }
 
-    # Allow multiple attempts to call the API incase of downtime.
-    # Return provided response to user after 3 failed attempts.
+    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용합니다.
+    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환합니다.
     wait_seconds = [base**i for i in range(max_tries)]
 
     for num_tries in range(max_tries):
@@ -155,12 +155,10 @@ def code_llama(prompt,
     return response
 
 
-# 20 is the minum new tokens, 
-# which allow for the largest number of
-# tokens for the input prompt: 4097 - 20 = 4077 
-# But max_tokens limits the number of output tokens
-# sum of input prompt tokens + max_tokens (response)
-# can't exceed 4097.
+# 20은 최소 새 토큰 수, 
+# 이는 입력 프롬프트의 최대 토큰 수를 허용합니다: 4097 - 20 = 4077
+# 그러나 max_tokens는 추력 토큰 수를 제한합니다.
+# 입력 프롬프트 토큰 수 + max_tokens (응답 토큰 수)의 합은 4097을 초과할 수 없습니다.
 def llama(prompt, 
           add_inst=True, 
           model="togethercomputer/llama-2-7b-chat", 
@@ -169,7 +167,7 @@ def llama(prompt,
           verbose=False,
           url=url,
           headers=headers,
-          base=2, # number of seconds to wait
+          base=2, # 대기할 시간(초)
           max_tries=3):
     
     if add_inst:
@@ -186,8 +184,8 @@ def llama(prompt,
             "max_tokens": max_tokens
         }
 
-    # Allow multiple attempts to call the API incase of downtime.
-    # Return provided response to user after 3 failed attempts.    
+    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용합니다.
+    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환합니다.    
     wait_seconds = [base**i for i in range(max_tries)]
 
     for num_tries in range(max_tries):
@@ -223,8 +221,8 @@ def llama_chat(prompts,
 
     prompt = get_prompt_chat(prompts,responses)
 
-    # Allow multiple attempts to call the API incase of downtime.
-    # Return provided response to user after 3 failed attempts.
+    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용합니다.
+    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환합니다.
     wait_seconds = [base**i for i in range(max_tries)]
 
     for num_tries in range(max_tries):
