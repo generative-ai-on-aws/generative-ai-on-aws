@@ -1,4 +1,4 @@
-"""Util function to get GPT or BLOOM model configs."""
+"""GPT 또는 BLOOM 모델 구성을 가져오는 Util 함수입니다."""
 
 import logging
 
@@ -12,7 +12,7 @@ from transformers import (  # pylint: disable=import-error
 
 
 def _get_gpt2_config_from_args(args):
-    """Get GPT2 config."""
+    """GPT2 구성을 가져옵니다."""
 
     return {
         "vocab_size": args.vocab_size,
@@ -41,7 +41,7 @@ def _get_gpt2_config_from_args(args):
 
 
 def _get_gpt_neox_config_from_args(args):
-    """Get GPTNeoX config."""
+    """GPTNeoX 구성을 가져옵니다."""
 
     return {
         "vocab_size": args.vocab_size,
@@ -61,7 +61,7 @@ def _get_gpt_neox_config_from_args(args):
 
 
 def _get_bloom_config_from_args(args):
-    """Get BLOOM config."""
+    """BLOOM 구성을 가져옵니다."""
 
     return {
         "vocab_size": args.vocab_size,
@@ -86,7 +86,7 @@ def _get_bloom_config_from_args(args):
 
 
 def _get_t5_config_from_args(args):
-    """Get T5 config."""
+    """T5 구성을 가져옵니다."""
 
     return {
         "vocab_size": args.vocab_size,
@@ -111,7 +111,7 @@ def _get_t5_config_from_args(args):
 
 
 def get_model_config_from_args(model_type, model_name, args, log=False):
-    """Get model config for GPT or BLOOM: From cmd args."""
+    """명령어 인수에서 GPT 또는 BLOOM 모델 구성을 가져옵니다."""
     if model_name:
         logging.info(f"Loading config from HF model {model_name}")
         return AutoConfig.from_pretrained(model_name), args

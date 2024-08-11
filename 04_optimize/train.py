@@ -1,4 +1,4 @@
-"""Train GPT or BLOOM models."""
+"""GPT 또는 BLOOM 모델 학습"""
 
 # pylint: disable=protected-access,too-many-lines
 
@@ -40,8 +40,8 @@ if not sys.warnoptions:
 
 
 def get_learning_rate_scheduler(optimizer, args):
-    """Get learning rate scheduler."""
-    # Add linear learning rate scheduler.
+    """학습률 스케줄러 가져오기"""
+    # 선형 학습률 스케줄러 추가
     if args.lr_decay_iters is not None:
         num_iters = args.lr_decay_iters
     else:
@@ -67,7 +67,7 @@ def get_learning_rate_scheduler(optimizer, args):
 
 
 def get_param_groups_by_weight_decay(module):
-    """Get param groups."""
+    """매개변수 그룹 가져오기"""
     weight_decay_params = {"params": []}
     no_weight_decay_params = {"params": [], "weight_decay": 0.0}
     param_ids = set()
@@ -95,7 +95,7 @@ def get_param_groups_by_weight_decay(module):
     return weight_decay_params, no_weight_decay_params
 
 
-# smdistributed: Define smp.step. Return any tensors needed outside.
+# smdistributed: smp.step 정의. 외부에서 필요한 텐서를 반환합니다.
 @smp.step
 def train_step(model, input_ids, attention_mask, args):
     """Train step."""
@@ -111,16 +111,16 @@ def train_step(model, input_ids, attention_mask, args):
     return loss
 
 
-# smdistributed: Define smp.step. Return any tensors needed outside.
+# smdistributed: smp.step 정의. 외부에서 필요한 텐서를 반환합니다.
 @smp.step
 def test_step(model, input_ids, attention_mask):
-    """Test step."""
+    """학습 단계"""
     loss = model(input_ids=input_ids, attention_mask=attention_mask, labels=input_ids)["loss"]
     return loss
 
 
 def eval_model(model, dataloader, num_batches, use_bert_data):
-    """Eval model."""
+    """모델 평가"""
     model = model.eval()
     n_batches = 0
     loss = 0.0
@@ -209,7 +209,7 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
     )
 
     if args.validation_freq is not None:
-        # load all validation examples
+        # 모든 검증 예제 로드
         if smp.rank() == 0:
             logging.info("Creating val dataloader")
         if args.use_bert_data:
@@ -257,14 +257,14 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
         return batch_idx % args.gradient_accumulation == args.gradient_accumulation - 1
 
     def should_record():
-        # only record the ranks that in the tp group that contains global rank 0
+        # 전역 rank 0을 포함하는 tp 그룹에 있는 rank만 기록합니다.
         if smp.tp_size() > 1:
             tp_group = smp.get_tp_group()
             return 0 in tp_group
 
         return smp.rank() == 0
 
-    # Set the same seed for computation
+    # 계산을 위한 동일한 시드 설정
     set_seed(args.seed)
 
     for index in range(start_train_path_index, args.epochs * len(train_paths)):
@@ -308,7 +308,7 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
                         batch_idx,
                     )
                 if start_batch_index == len(train_dataloader):
-                    # If saving at the last batch of the file, read from the next file
+                    # 파일의 마지막 배치에서 저장하는 경우, 다음 파일에서 읽어옵니다.
                     start_batch_index = 0
                     break
                 continue
@@ -338,10 +338,10 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
                 else:
                     logits = torch.cat(tuple(logits_mb.outputs), dim=0)  # pylint: disable=no-member
             else:
-                # Return value, loss_mb is a StepOutput object
+                # 반환 값, loss_mb는 StepOutput 객체입니다.
                 loss_mb = train_step(model, input_ids, attention_mask, args)
 
-            # smdistributed: Average the loss across microbatches.
+            # smdistributed: microbatches 간 손실을 평균냅니다.
             loss = loss_mb.reduce_mean()
             if not args.validation_freq:
                 loss_metric = loss.item()
@@ -351,12 +351,12 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
                 memory_status(msg="After_train_step")
 
             if args.clean_cache > 0:
-                # empty the cache to avoid OOM
+                # OOM을 피하기 위해 캐시를 비웁니다.
                 torch.cuda.empty_cache()
 
             if grad_accumulation_boundary(batch_idx):
                 if args.sharded_data_parallel_degree < 1:
-                    # as SDP does its own clipping through sdp_gradient_clipping arg in init config
+                    # SDP는 sdp_gradient_clipping 인수를 통해 자체 클리핑을 수행
                     optimizer.clip_master_grads(args.grad_clip)
 
                 optimizer.step()
@@ -376,7 +376,7 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
             throughput = sample_processed / step_time
             throughputs.append(throughput)
 
-            # Based on the formula in
+            # 공식 기반
             # https://developer.nvidia.com/blog/scaling-language-model-training-to-a-trillion-parameters-using-megatron/
             tflops_per_gpu = compute_tflops(
                 throughput, num_params, smp.size(), input_ids.shape[1], log = (batch_idx == 0)
@@ -404,8 +404,8 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
                     gradnorm_str,
                 )
 
-                # Compute average throughput and tflops after 30 steps to remove
-                # high variance in initial steps
+                # 초기 단계의 높은 변동성을 제거하기 위해 30단계 후
+                # 평균 처리량과 TFLOPs를 계산합니다.
                 if len(throughputs) > 30:
                     avg_throughput = np.average(throughputs[30:])
                     avg_tflops = compute_tflops(
@@ -416,9 +416,9 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
                         + f" Running Avg Speed: {avg_throughput} samples/sec,"
                         + f" Running Avg TFLOPS/GPU: {avg_tflops}"
                     )
-            # evaluate on validation
+            # 검증에서 평가합니다.
             if args.validation_freq and not total_steps % args.validation_freq:
-                # In GPT-NeoX runs with SDPTP, validation runs require a clean cache
+                # GPT-NeoX에서 SDPTP를 사용하여 검증을 실행하면 캐시를 정리 해야 합니다.
                 torch.cuda.empty_cache()
                 cur_state = np.random.get_state()
                 model = model.eval()
@@ -445,7 +445,7 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
                 if args.preserve_np_state > 0:
                     np.random.set_state(cur_state)
 
-            # checkpoint
+            # 체크포인트
             if not total_steps % args.checkpoint_freq:
                 user_content = {
                     "cli_args": args.__dict__,
@@ -457,9 +457,9 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
                 }
 
                 user_content["lr_scheduler"] = lr_scheduler.state_dict()
-                # buffer_names and param_shapes used to reconstruct the full model
-                # are automatically saved by smp.save_checkpoint() in user_content
-                # for partial checkpoints
+                # buffer_names와 param_shapes는 부분 체크포인트를 위해 
+                # smp.save_checkpoint()에 의해 자동으로 user_content에 저장됩니다.
+                # 이를 통해 전체 모델을 재구성할 수 있습니다.
                 smp.save_checkpoint(
                     args.checkpoint_dir,
                     tag=f"total_steps{total_steps}",
@@ -490,7 +490,7 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
             train_dataloader = dataset_future.result(timeout=None)
             wait_time = time.time() - s
             if wait_time > 1:
-                # TODO if this happens, we should try num_workers>1 in dataloader  # pylint: disable=fixme
+                # TODO: 이 문제가 발생하면 데이터로더에서 num_workers>1을 시도해야 합니다.  # pylint: disable=fixme
                 logging.info(
                     "[%d] Waited %s for data loader to be ready. "
                     "Please check if dataloader performance can be "
@@ -512,15 +512,15 @@ def train(  # pylint: disable=too-many-arguments,too-many-branches,too-many-loca
                 data_type=data_type,
             )
 
-    # Using median throughput across all steps, could be more robust.
+    # 모든 단계에서 중앙값 처리량을 사용하는 것이 더 견고할 수 있습니다.
     return total_steps, np.median(throughputs) if throughputs else 0, loss_metric
 
 
 def parse_args():  # pylint: disable=too-many-statements
-    """Parse args."""
+    """인자 분석"""
     parser = argparse.ArgumentParser()
 
-    # hyperparameters sent by the client are passed as command-line arguments to the script.
+    # 클라이언트가 보낸 하이퍼파라미터는 스크립트에 명령행 인수로 전달됩니다.
 
     opt_grp = parser.add_argument_group(
         title="optimization", description="arguments for optimization"
@@ -610,7 +610,7 @@ def parse_args():  # pylint: disable=too-many-statements
         "--logits_output", type=str, default="", help="Path to save logits and loss"
     )
     io_grp.add_argument("--prescaled_batch", type=int, default=1, help="use prescaled batch")
-    # configure model size
+    # 모델 크기 구성
     model_grp = parser.add_argument_group(
         title="model", description="arguments to describe model configuration"
     )
@@ -748,7 +748,7 @@ def parse_args():  # pylint: disable=too-many-statements
         "--enable_memory_profiling", type=int, default=0, help="Enable memory profile"
     )
 
-    # learning rate
+    # 학습률
     lr_grp = parser.add_argument_group(
         title="lr", description="arguments for learning rate schedule"
     )
@@ -796,7 +796,7 @@ def parse_args():  # pylint: disable=too-many-statements
 
 
 def compute_num_params(model):
-    """Get num params."""
+    """매개변수 수 가져오기"""
     num_params = 0
     seen = set()
     for p in model.parameters():  # pylint: disable=invalid-name
@@ -811,7 +811,7 @@ def compute_num_params(model):
 
 
 def compute_tflops(throughput, num_params, num_gpus, seq_len, log = False):
-    """Compute TFLOPs."""
+    """TFLOPs 계산"""
     tflops = 8 * throughput * num_params / num_gpus * seq_len * 1e-12
     if log and smp.rank() == 0:
         logging.info("Compute tflops: (%s, %s, %s, %s) ==> %s.",
@@ -832,7 +832,7 @@ def _show_env_vars(rank: Optional[int] = 0):
 
 
 def main():  # pylint: disable=too-many-branches,too-many-locals,too-many-statements
-    """Main function to train GPT."""
+    """GPT 학습을 위한 주요 함수"""
     args = parse_args()
 
     if args.partition_assignment != "" and args.manual_partition == 0:
@@ -906,9 +906,8 @@ def main():  # pylint: disable=too-many-branches,too-many-locals,too-many-statem
     model_config.n_head_kv = args.num_heads_kv
     model_config.use_cache = False
 
-    # the following improves start-up time by skipping proper initialization
-    # of weights in the original model. this is not a problem because DistributedModel
-    # will override those weights anyway when we use distributed transformer.
+    # 다음 방법은 원래 모델에서 가중치를 올바르게 초기화하는 것을 건너뛰어 시작 시간을 단축합니다.
+    # 이는 'DistributedModel'이 분산 트랜스포머를 사용할 때 가중치를 덮어쓸 것이기 때문에 문제가 되지 않습니다.    
     if args.use_distributed_transformer > 0:
         from transformers.modeling_utils import (  # pylint: disable=import-error,import-outside-toplevel
             PreTrainedModel,
@@ -945,10 +944,10 @@ def main():  # pylint: disable=too-many-branches,too-many-locals,too-many-statem
         torch.save(model_state_dict, path)
     smp.barrier()
 
-    # About zero_init:
-    # we only want to init with zero for actual model for training,
-    # in disttf case it's used in DistModel wrapper. for others we don't need to set zero init
-    # This is needed only to param_id_to_offset
+    # zero_init에 대한 설명:
+    # 실제 모델의 학습을 위해 0으로 초기화하고 싶습니다.
+    # disttf 경우 DistModel 래퍼에서 사용됩니다. 다른 경우에는 0 초기화를 설정할 필요가 없습니다.
+    # 이것은 오직 param_id_to_offset에 필요합니다.    
     with smp.model_creation(
         tensor_parallelism=smp.tp_size() > 1 or args.use_distributed_transformer > 0,
         zero_init=args.use_distributed_transformer == 0,
@@ -971,18 +970,17 @@ def main():  # pylint: disable=too-many-branches,too-many-locals,too-many-statem
     if args.enable_memory_profiling > 0:
         memory_status_cpu(msg="after model creation")
 
-    # smdistributed: Set the device to the GPU ID used by the current process.
-    # Input tensors should be transferred to this device.
+    # smdistributed: 현재 프로세스에서 사용 중인 GPU ID로 장치를 설정합니다.
+    # 입력 텐서는 이 장치로 전송되어야 합니다.
     torch.cuda.set_device(smp.local_rank())
 
     if not args.same_seed:
-        # Set seed by tp_rank to prevent weights from being the same on different tp_ranks
+        # tp_rank에 따라 시드를 설정하여 서로 다른 tp_rank에서 가중치가 동일해지는 것을 방지합니다.
         set_seed(args.seed + smp.tp_rank())
 
-    # smdistributed: Use the DistributedModel container to provide the model
-    # to be partitioned across different ranks. For the rest of the script,
-    # the returned DistributedModel object should be used in place of
-    # the model provided for DistributedModel class instantiation.
+    # smdistributed: DistributedModel 컨테이너를 사용하여 모델을 다양한 rank에 걸쳐 분할합니다. 
+    # 스크립트의 나머지 부분에서는 DistributedModel 클래스 인스턴스화에 제공된 모델 대신
+    # 반환된 DistributedModel 객체를 사용해야 합니다.    
     if args.enable_memory_profiling > 0:
         memory_status_cpu(msg="before dist model creation")
 
@@ -1023,15 +1021,15 @@ def main():  # pylint: disable=too-many-branches,too-many-locals,too-many-statem
             logging.fatal("Will fail with: %s.", msg)
             raise AssertionError(msg)
 
-        # evenly distribute layers across all partitions
+        # 모든 파티션에 레이어를 균등하게 분산합니다.
         div, rem = divmod(args.num_layers, smp.pp_size())
         get_num_layers = lambda x: (  # pylint: disable=unnecessary-lambda-assignment
             div + 1 if x >= smp.pp_size() - rem else div
         )
 
         assignments = []
-        # (TODO) This is required for 175B otherwise a hang for partition "8,17,17,18,18,18"
-        # Need further investigation
+        # (TODO) 175B에 필요하며 그렇지 않으면 파티션 "8,17,17,18,18,18"에서 멈추는 문제가 발생합니다.
+        # 추가 조사 필요
         # for pp_rank in reversed(range(smp.pp_size())):
         for pp_rank in range(smp.pp_size()):
             nl = get_num_layers(pp_rank)  # pylint: disable=invalid-name
@@ -1080,7 +1078,7 @@ def main():  # pylint: disable=too-many-branches,too-many-locals,too-many-statem
                         smp.set_activation_checkpointing(c.self_attention)
                 else:
                     smp.set_activation_checkpointing(c)
-            # Checkpoint decoder layers in T5
+            # T5에서 디코더 레이어 체크포인트
             if args.model_type == "flan_t5":
                 for c in m.decoder.block.children():  # pylint: disable=invalid-name
                     smp.set_activation_checkpointing(c)
@@ -1110,7 +1108,7 @@ def main():  # pylint: disable=too-many-branches,too-many-locals,too-many-statem
             lambda model, optimizer: memory_status(msg="After partition")
         )
 
-    # load after wrapping model and optimizer with smp Distributed...
+    # 모델과 옵티마이저를 분산된 smp로 래핑한 후 로드합니다...
     if args.load_full or args.load_partial:
         if args.load_partial and args.load_full:
             logging.info(
@@ -1132,8 +1130,7 @@ def main():  # pylint: disable=too-many-branches,too-many-locals,too-many-statem
         start_train_path_index = 0
         start_batch_index = 0
 
-    # Add emty cache to clear memory when loaded with partial checkpointing
-    # for SDPTP and GPT NeoX
+    # 부분 체크포인팅과 SDPTP 및 GPT NeoX의 경우 메모리를 지우기 위해 빈 캐시를 추가합니다.
     torch.cuda.empty_cache()
 
     start = time.time()
@@ -1171,7 +1168,7 @@ def main():  # pylint: disable=too-many-branches,too-many-locals,too-many-statem
                 raise AssertionError(msg)
 
     if args.save_final_full_model:
-        # saves full model at the end
+        # 끝에서 전체 모델을 저장합니다.
         user_content = {
             "cli_args": args.__dict__,
             "num_params": num_params,
@@ -1179,12 +1176,12 @@ def main():  # pylint: disable=too-many-branches,too-many-locals,too-many-statem
             "model_config": model_config,
         }
         # pylint: disable=line-too-long
-        # You can also get the full model from the SDP checkpoint, by using the following API
+        # 다음 API를 사용하여 SDP 체크포인트에서 전체 모델을 얻을 수도 있습니다.
         # > from smp.sharded_data_parallel_checkpoint import get_full_state_dict_from_sharded_data_parallel_checkpoint
         # > full_model = get_full_state_dict_from_sharded_data_parallel_checkpoint(args.model_dir, tag=f"sharded_data_parallel_final_full_{num_params}", dtype=torch.float32)
         # > if args.use_distributed_transformer > 0: # translate the state_dict to hf format if distributed transformer is used
         # >     full_model = smp.nn.huggingface.gpt2.translate_state_dict_to_hf_gpt2(full_model, max_seq_len=args.max_context_width)
-        # Note: the shared parameter will not be reflected so during loading you might need to load with strict=False
+        # 참고: 공유된 매개변수는 반영되지 않으므로 로드 중에는 `strict=False`로 로드해야 할 수 있습니다.
         # pylint: enable=line-too-long
         smp.save_checkpoint(
             args.model_dir,
