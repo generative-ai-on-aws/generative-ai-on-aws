@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Learning rate decay functions."""
+"""학습률 감소 함수"""
 
 import math
 
@@ -21,7 +21,7 @@ import smdistributed.modelparallel.torch as smp
 
 
 class AnnealingLR(object):
-    """Anneals the learning rate."""
+    """학습률을 점진적으로 감소시킵니다."""
 
     def __init__(
         self,
@@ -60,8 +60,8 @@ class AnnealingLR(object):
             print("Learning rate decay style: {}".format(self.decay_style))
 
     def get_lr(self):
-        """Learning rate decay functions from:
-        https://openreview.net/pdf?id=BJYwwY9ll pg. 4"""
+        """학습률 감소 함수들은 다음에서 가져옵니다.
+        https://openreview.net/pdf?id=BJYwwY9ll 4 페이지"""
 
         num_iters_ = min(self.num_iters, self.end_iter - self.warmup_iter)
         # Warmup.
@@ -90,7 +90,7 @@ class AnnealingLR(object):
         return max(lr, self.min_lr)
 
     def step(self, step_num=None):
-        """Set lr for all parameters groups."""
+        """모든 매개변수 그룹에 대한 lr을 설정합니다."""
         if step_num is None:
             step_num = self.num_iters + 1
         self.num_iters = step_num
@@ -110,8 +110,7 @@ class AnnealingLR(object):
         return state_dict
 
     def _check_and_set(self, cls_value, sd_value, name):
-        """Auxiliary function for checking the values in the checkpoint and
-        setting them."""
+        """체크포인트의 값을 확인하고 설정하는 보조 함수입니다."""
         if self.override_lr_scheduler:
             if smp.rank() == 0:
                 print("Overriding {} value to {}".format(name, cls_value))

@@ -45,7 +45,7 @@ class BertPretrainingDataset(torch.utils.data.Dataset):
 
         masked_lm_labels = torch.ones(input_ids.shape, dtype=torch.long) * -1
         index = self.max_pred_length
-        # store number of  masked tokens in index
+        # 인덱스에 마스킹된 토큰 수 저장
         padded_mask_indices = (masked_lm_positions == 0).nonzero(as_tuple=False)
         if len(padded_mask_indices) != 0:
             index = padded_mask_indices[0].item()
@@ -54,7 +54,7 @@ class BertPretrainingDataset(torch.utils.data.Dataset):
         return [input_ids, segment_ids, input_mask, masked_lm_labels, next_sentence_labels]
 
 
-###### Load GPT pretraining data ######
+###### GPT 사전 학습 데이터 로드 ######
 class GPTPretrainingDataset(torch.utils.data.Dataset):
     def __init__(
         self,
@@ -107,7 +107,7 @@ class GPTPretrainingDataset(torch.utils.data.Dataset):
             iids = iids[s_idx:e_idx]
             attns = attns[s_idx:e_idx]
 
-        # Hack to use 4096 seqlen with our existing synthetic data for benchmarking purposes only
+        # 벤치마킹 목적으로 기존의 합성 데이터에서 4096 시퀀스 길이를 사용하기 위한 Hack        
         # iids = iids.repeat(1,2).flatten()
         # attns = attns.repeat(1,2).flatten()
         # assert iids.shape[0] == 4096, iids.shape
@@ -166,8 +166,8 @@ def create_pretraining_dataloader(
             )
         else:
             raise ValueError(f"Unsupported data type {data_type}")
-        # TODO: set sampler.epoch to correctly shuffle across epochs, else same order will be used for all epochs
-        # not relevant now as we have no epochs
+        # TODO: 에포크에 걸쳐 올바르게 셔플하도록 sampler.epoch 설정, 그렇지 않으면 모든 에포크에서 동일한 순서가 사용됨
+        # 현재는 에포크가 없으므로 관련 없음
         sampler = torch.utils.data.DistributedSampler(
             data, shuffle=shuffle, seed=seed, rank=dp_rank, num_replicas=dp_size, drop_last=True
         )

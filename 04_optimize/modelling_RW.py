@@ -1,6 +1,6 @@
-# port of models described in RW
-# We use the bloom model as a starting point for these model.
-# Please refer to the bloom models for usage instructions.
+# RW에서 설명된 모델의 포트
+# 이 모델을 시작점으로 BLOOM 모델을 사용합니다.
+# 사용 지침은 BLOOM 모델을 참조하면 됩니다.
 
 import math
 import warnings
@@ -25,8 +25,8 @@ from configuration_RW import RWConfig
 
 logger = logging.get_logger(__name__)
 
-# NOTE(Hesslow): Unfortunately we did not fuse matmul and bias during training, this means that there's one additional quantization to bfloat16 between the operations.
-# In order not to degrade the quality of our HF-port, we keep these characteristics in the final model.
+# 참고(Hesslow): 불행히도 우리는 학습 중 matmul과 bias를 결합하지 않았습니다. 이로 인해 연산 간에 bfloat16으로 추가적인 양자화가 발생합니다.
+# HF 포트의 품질을 저하시키지 않기 위해, 최종 모델에서는 이러한 특성을 유지합니다.
 class Linear(nn.Linear):
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         ret = input @ self.weight.T
@@ -38,16 +38,16 @@ class Linear(nn.Linear):
 
 from einops import rearrange
 
-# rotary pos emb helpers (torch.jit.script does not seem to support staticmethod...)
+# rotary pos emb helpers (torch.jit.script는 staticmethod를 지원하지 않는 것 같습니다...)
 def rotate_half(x):
     x1, x2 = x[..., : x.shape[-1] // 2], x[..., x.shape[-1] // 2 :]
     return torch.cat((-x2, x1), dim=x1.ndim - 1)  # dim=-1 triggers a bug in torch < 1.8.0
 
 
 class RotaryEmbedding(torch.nn.Module):
-    """Implementation of RotaryEmbedding from GPT-NeoX.
-    This implementation is design to operate on queries and keys that are compatible with
-    [batch_size, n_heads_per_partition, seq_len, head_dim] (e.g. MinGPTAttention format).
+    """GPT-NeoX에서 RotaryEmbedding의 구현입니다.
+    이 구현은 [batch_size, n_heads_per_partition, seq_len, head_dim]과
+    호환되는 쿼리와 키에서 작동하도록 설계되었습니다 (예: MinGPTAttention 형식).
     """
 
     def __init__(
@@ -98,7 +98,7 @@ def _make_causal_mask(
 ) -> torch.BoolTensor:
     batch_size, target_length = input_ids_shape
     mask = torch.empty((target_length, target_length + past_key_values_length), dtype=torch.bool, device=device)
-    # ONNX doesn't support `torch.Tensor.triu` properly, thus we use this workaround
+    # ONNX는 torch.Tensor.triu를 제대로 지원하지 않으므로, 이 우회 방법을 사용합니다.
     seq_ids = torch.arange(target_length, device=device)
     mask[:, past_key_values_length:] = seq_ids[:, None] < seq_ids[None, :]
 
@@ -134,11 +134,11 @@ def build_alibi_tensor(attention_mask: torch.Tensor, num_heads: int, dtype: torc
         extra_powers = torch.arange(1, 1 + 2 * num_remaining_heads, 2, device=attention_mask.device, dtype=torch.int32)
         slopes = torch.cat([slopes, torch.pow(extra_base, extra_powers)], dim=0)
 
-    # Note: alibi will added to the attention bias that will be applied to the query, key product of attention
-    # => therefore alibi will have to be of shape (batch_size, num_heads, query_length, key_length)
-    # => here we set (batch_size=1, num_heads=num_heads, query_length=1, key_length=max_length)
-    # => the query_length dimension will then be broadcasted correctly
-    # This is more or less identical to T5's relative position bias:
+    # 참고: alibi는 query와 key 곱에 적용될 attention bias에 추가됩니다.
+    # => 따라서 alibi는 (batch_size, num_heads, query_length, key_length)의 형태여야 합니다
+    # => 여기서는 (batch_size=1, num_heads=num_heads, query_length=1, key_length=max_length)로 설정합니다
+    # => query_length 차원은 올바르게 브로드캐스트됩니다.
+    # 이는 T5의 relative position bias과 거의 동일합니다.
     # https://github.com/huggingface/transformers/blob/f681437203baa7671de3174b0fa583c349d9d5e1/src/transformers/models/t5/modeling_t5.py#L527
     arange_tensor = ((attention_mask.cumsum(dim=-1) - 1) * attention_mask)[:, None, :]
     alibi = slopes[..., None].bfloat16() * arange_tensor
@@ -169,7 +169,7 @@ class Attention(nn.Module):
 
         self.maybe_rotary = RotaryEmbedding(config.head_dim) if config.rotary else lambda q, k: (q, k)
 
-        # Layer-wise attention scaling
+        # 레이어별 어텐션 스케일링
         self.inv_norm_factor = 1.0 / math.sqrt(self.head_dim)
         self.beta = self.inv_norm_factor
 
@@ -184,8 +184,8 @@ class Attention(nn.Module):
 
     def _split_heads(self, fused_qkv: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """
-        Split the last dimension into (num_heads, head_dim), results share same memory
-        storage as `fused_qkv`
+        마지막 차원을 (num_heads, head_dim)으로 나누고,
+        결과는 `fused_qkv`와 동일한 메모리 저장소를 공유합니다        
 
         Args:
             fused_qkv (`torch.tensor`, *required*): [batch_size, seq_length, num_heads * 3 * head_dim]
@@ -216,7 +216,7 @@ class Attention(nn.Module):
 
     def _merge_heads(self, x: torch.Tensor) -> torch.Tensor:
         """
-        Merge heads together over the last dimenstion
+        마지막 차원에서 헤드를 함께 병합합니다.
 
         Args:
             x: (`torch.tensor`, *required*): [batch_size * num_heads, seq_length, head_dim]
@@ -224,12 +224,12 @@ class Attention(nn.Module):
         Returns:
             torch.tensor: [batch_size, seq_length, num_heads * head_dim]
         """
-        # What we want to achieve is:
+        # 우리가 달성하려는 것:
         # batch_size * num_heads, seq_length, head_dim -> batch_size, seq_length, num_heads * head_dim
         batch_size_and_num_heads, seq_length, _ = x.shape
         batch_size = batch_size_and_num_heads // self.num_heads
 
-        # First view to decompose the batch size
+        # 배치 크기를 분해하는 첫 번째 뷰
         # batch_size * num_heads, seq_length, head_dim -> batch_size, num_heads, seq_length, head_dim
         x = x.view(batch_size, self.num_heads, seq_length, self.head_dim)
 
@@ -268,7 +268,7 @@ class Attention(nn.Module):
 
         if layer_past is not None:
             past_key, past_value = layer_past
-            # concatenate along seq_length dimension:
+            # seq_length 차원에 따라 연결합니다.
             #  - key: [batch_size * self.num_heads, head_dim, kv_length]
             #  - value: [batch_size * self.num_heads, kv_length, head_dim]
             key_layer = torch.cat((past_key, key_layer), dim=1)
@@ -297,18 +297,18 @@ class Attention(nn.Module):
             output_tensor = self.dense(attn_output)
 
             outputs = (output_tensor, present)
-            assert not output_attentions  # not supported.
+            assert not output_attentions  # 지원되지 않음.
             return outputs
         else:
             attention_mask_float = (attention_mask * 1.0).masked_fill(attention_mask, -1e9).to(torch.bfloat16)
             matmul_result = query_layer @ key_layer.transpose(-1, -2)
 
-            # change view to [batch_size, num_heads, q_length, kv_length]
+            # 뷰 변경 [batch_size, num_heads, q_length, kv_length]
             attention_scores = matmul_result.view(batch_size, self.num_heads, q_length, kv_length)
 
-            # cast attention scores to fp32, compute scaled softmax and cast back to initial dtype - [batch_size, num_heads, q_length, kv_length]
+            # 어텐션 점수를 fp32로 캐스팅하고, 스케일링된 소프트맥스(softmax)를 계산한 후 초기 dtype으로 캐스팅합니다 - [batch_size, num_heads, q_length, kv_length]
             input_dtype = attention_scores.dtype
-            # `float16` has a minimum value of -65504.0, whereas `bfloat16` and `float32` have a minimum value of `-3.4e+38`
+            # `float16`의 최소값은 -65504.0인 반면, `bfloat16`과 `float32`는 최소값이 -3.4e+38입니다.
             if input_dtype == torch.float16 or input_dtype == torch.bfloat16:
                 attention_scores = attention_scores.to(torch.float32)
             # attn_weights = torch.masked_fill(attention_scores, attention_mask, torch.finfo(attention_scores.dtype).min)
@@ -324,13 +324,13 @@ class Attention(nn.Module):
             if head_mask is not None:
                 attention_probs = attention_probs * head_mask
 
-            # change view [batch_size x num_heads, q_length, kv_length]
+            # 뷰 변경 [batch_size x num_heads, q_length, kv_length]
             attention_probs_reshaped = attention_probs.view(batch_size * self.num_heads, q_length, kv_length)
 
             # matmul: [batch_size * num_heads, q_length, head_dim]
             context_layer = attention_probs_reshaped @ value_layer
 
-            # change view [batch_size, num_heads, q_length, head_dim]
+            # 뷰 변경 [batch_size, num_heads, q_length, head_dim]
             context_layer = self._merge_heads(context_layer)
 
             output_tensor = self.dense(context_layer)
@@ -392,7 +392,7 @@ class DecoderLayer(nn.Module):
 
         residual = hidden_states
 
-        # Self attention.
+        # 셀프 어텐션
         attn_outputs = self.self_attention(
             ln_attn,
             layer_past=layer_past,
@@ -425,8 +425,7 @@ class DecoderLayer(nn.Module):
 class RWPreTrainedModel(PreTrainedModel):
     _keys_to_ignore_on_load_missing = [r"h.*.self_attention.scale_mask_softmax.causal_mask", r"lm_head.weight"]
     """
-    An abstract class to handle weights initialization and a simple interface for downloading and loading pretrained
-    models.
+    가중치 초기화를 처리하고, 사전 학습된 모델을 다운로드하고 로드하는 간단한 인터페이스를 제공하는 추상 클래스입니다.
     """
 
     config_class = RWConfig
@@ -438,9 +437,9 @@ class RWPreTrainedModel(PreTrainedModel):
         super().__init__(*inputs, **kwargs)
 
     def _init_weights(self, module: nn.Module):
-        """Initialize the weights."""
+        """가중치 초기화"""
         if isinstance(module, nn.Linear) or isinstance(module, Linear):
-            # Slightly different from the TF version which uses truncated_normal for initialization
+            # 초기화 시 truncated_normal을 사용하는 TF 버전과 약간 다릅니다.            
             # cf https://github.com/pytorch/pytorch/pull/5617
             module.weight.data.normal_(mean=0.0, std=self.config.initializer_range)
             if module.bias is not None:
@@ -462,7 +461,7 @@ class RWPreTrainedModel(PreTrainedModel):
         past_key_value: Tuple[Tuple[torch.Tensor, torch.Tensor]], batch_size: int
     ) -> Tuple[Tuple[torch.Tensor, torch.Tensor]]:
         """
-        Standardizes the format of the cache so as to match most implementations, i.e. to tuple(tuple([batch_size,
+        캐시의 형식을 대부분의 구현과 일치하도록 표준화합니다. 예시. tuple(tuple([batch_size,
         num_heads, ...]))
         """
         batch_size_times_num_heads, head_dim, seq_length = past_key_value[0][0].shape
@@ -505,15 +504,15 @@ class RWModel(RWPreTrainedModel):
         # Embedding + LN Embedding
         self.word_embeddings = nn.Embedding(config.vocab_size, self.embed_dim)
 
-        # Transformer blocks
+        # 트랜스포머 블럭
         self.h = nn.ModuleList([DecoderLayer(config) for _ in range(config.num_hidden_layers)])
 
-        # Final Layer Norm
+        # 최종 레이어 Norm
         self.ln_f = LayerNorm(self.embed_dim, eps=config.layer_norm_epsilon)
 
         self.gradient_checkpointing = False
 
-        # Initialize weights and apply final processing
+        # 가중치를 초기화하고 최종 처리를 적용합니다.
         self.post_init()
 
     def get_input_embeddings(self):
@@ -522,7 +521,7 @@ class RWModel(RWPreTrainedModel):
     def _prepare_attn_mask(
         self, attention_mask: torch.Tensor, input_shape: Tuple[int, int], past_key_values_length: int
     ) -> torch.BoolTensor:
-        # create causal mask
+        # causal mask를 생성합니다.
         # [batch_size, seq_length] -> [batch_size, 1, tgt_length, src_length]
         combined_attention_mask = None
         device = attention_mask.device
@@ -558,7 +557,8 @@ class RWModel(RWPreTrainedModel):
         **deprecated_arguments,
     ) -> Union[Tuple[torch.Tensor, ...], BaseModelOutputWithPastAndCrossAttentions]:
         if deprecated_arguments.pop("position_ids", False) is not False:
-            # `position_ids` could have been `torch.Tensor` or `None` so defaulting pop to `False` allows to detect if users were passing explicitly `None`
+            # `position_ids`는 `torch.Tensor` 또는 `None`일 수 있으므로,
+            # 기본값으로 `False`를 설정하면 사용자가 명시적으로 `None`을 전달했는지 감지할 수 있습니다.            
             warnings.warn(
                 "`position_ids` have no functionality in BLOOM and will be removed in v5.0.0. You can safely ignore"
                 " passing `position_ids`.",
@@ -586,10 +586,10 @@ class RWModel(RWPreTrainedModel):
         if past_key_values is None:
             past_key_values = tuple([None] * len(self.h))
 
-        # Prepare head mask if needed
-        # 1.0 in head_mask indicate we keep the head
-        # attention_probs has shape batch_size x num_heads x N x N
-        # head_mask has shape n_layer x batch x num_heads x N x N
+        # 필요시 head mask를 준비합니다.
+        # 1.0의 head_mask는 헤드를 유지함을 나타냅니다.
+        # attention_probs는 batch_size x num_heads x N x N 형태입니다.
+        # head_mask는 n_layer x batch x num_heads x N x N 형태입니다.
         head_mask = self.get_head_mask(head_mask, self.config.n_layer)
 
         if inputs_embeds is None:
@@ -601,7 +601,7 @@ class RWModel(RWPreTrainedModel):
         all_self_attentions = () if output_attentions else None
         all_hidden_states = () if output_hidden_states else None
 
-        # Compute alibi tensor: check build_alibi_tensor documentation
+        # alibi 텐서 계산: build_alibi_tensor 문서 참조
         seq_length_with_past = seq_length
         past_key_values_length = 0
         if past_key_values[0] is not None:
@@ -638,7 +638,7 @@ class RWModel(RWPreTrainedModel):
 
                 def create_custom_forward(module):
                     def custom_forward(*inputs):
-                        # None for past_key_value
+                        # past_key_value에 None을 설정합니다.
                         return module(*inputs, use_cache=use_cache, output_attentions=output_attentions)
 
                     return custom_forward
@@ -668,7 +668,7 @@ class RWModel(RWPreTrainedModel):
             if output_attentions:
                 all_self_attentions = all_self_attentions + (outputs[2 if use_cache else 1],)
 
-        # Add last hidden state
+        # 마지막 hidden state 추가
         hidden_states = self.ln_f(hidden_states)
 
         if output_hidden_states:
@@ -693,7 +693,7 @@ class RWForCausalLM(RWPreTrainedModel):
         self.transformer = RWModel(config)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
 
-        # Initialize weights and apply final processing
+        # 가중치를 초기화하고 최종 처리를 적용합니다.
         self.post_init()
 
     def get_output_embeddings(self):
@@ -709,11 +709,11 @@ class RWForCausalLM(RWPreTrainedModel):
         attention_mask: Optional[torch.Tensor] = None,
         **kwargs,
     ) -> dict:
-        # only last token for input_ids if past is not None
+        # past가 None이 아닌 경우 input_ids에 대해 마지막 토큰만 사용합니다.
         if past:
             input_ids = input_ids[:, -1].unsqueeze(-1)
 
-            # the cache may be in the stardard format (e.g. in contrastive search), convert to our's format if needed
+            # 캐시가 표준 형식(예: 대조적(contrastive) 검색)일 수 있으므로, 필요시 우리 형식으로 변환합니다.
             if past[0][0].shape[0] == input_ids.shape[0]:
                 past = self._convert_to_rw_cache(past)
 
@@ -739,13 +739,14 @@ class RWForCausalLM(RWPreTrainedModel):
         **deprecated_arguments,
     ) -> Union[Tuple[torch.Tensor], CausalLMOutputWithCrossAttentions]:
         r"""
-        labels (`torch.LongTensor` of shape `(batch_size, sequence_length)`, *optional*):
-            Labels for language modeling. Note that the labels **are shifted** inside the model, i.e. you can set
-            `labels = input_ids` Indices are selected in `[-100, 0, ..., config.vocab_size]` All labels set to `-100`
-            are ignored (masked), the loss is only computed for labels in `[0, ..., config.vocab_size]`
+        labels (`(batch_size, sequence_length)` 형태의 `torch.LongTensor`, *optional*):
+            언어 모델링을 위한 라벨입니다. 라벨은 모델 내부에서 **이동**되므로, `labels = input_ids`를 설정할 수 있습니다.
+            인덱스는 `[-100, 0, ..., config.vocab_size]`에서 선택됩니다. 모든 라벨이 `-100`으로 설정되면 무시(마스킹)되며,
+            손실은 `[0, ..., config.vocab_size]`의 라벨에 대해서만 계산됩니다.
         """
         if deprecated_arguments.pop("position_ids", False) is not False:
-            # `position_ids` could have been `torch.Tensor` or `None` so defaulting pop to `False` allows to detect if users were passing explicitly `None`
+            # `position_ids`는 `torch.Tensor` 또는 `None`일 수 있으므로, 
+            # 기본값으로 `False`를 설정하면 사용자가 명시적으로 `None`을 전달했는지 감지할 수 있습니다            
             warnings.warn(
                 "`position_ids` have no functionality in BLOOM and will be removed in v5.0.0. You can safely ignore"
                 " passing `position_ids`.",
@@ -773,11 +774,11 @@ class RWForCausalLM(RWPreTrainedModel):
 
         loss = None
         if labels is not None:
-            # Shift so that tokens < n predict n
+            # n보다 작은 토큰들을 이동시켜서 n을 예측합니다.
             shift_logits = lm_logits[..., :-1, :].contiguous()
             shift_labels = labels[..., 1:].contiguous()
             batch_size, seq_length, vocab_size = shift_logits.shape
-            # Flatten the tokens
+            # 토큰을 평탄화합니다.
             loss_fct = CrossEntropyLoss()
             loss = loss_fct(
                 shift_logits.view(batch_size * seq_length, vocab_size), shift_labels.view(batch_size * seq_length)
@@ -799,15 +800,15 @@ class RWForCausalLM(RWPreTrainedModel):
         self, past: Tuple[Tuple[torch.Tensor, torch.Tensor], ...], beam_idx: torch.LongTensor
     ) -> Tuple[Tuple[torch.Tensor, torch.Tensor], ...]:
         """
-        This function is used to re-order the `past_key_values` cache if [`~PreTrainedModel.beam_search`] or
-        [`~PreTrainedModel.beam_sample`] is called. This is required to match `past_key_values` with the correct
-        beam_idx at every generation step.
+        이 함수는 `past_key_values` 캐시의 순서를 다시 정렬하는 데 사용됩니다.
+        이는 [`~PreTrainedModel.beam_search`] 또는 [`~PreTrainedModel.beam_sample`]이 호출될 때 필요합니다.
+        각 생성 단계에서 `past_key_values`와 올바른 `beam_idx`를 맞추기 위함입니다.
 
-        Output shares the same memory storage as `past`.
+        출력은 `past`와 동일한 메모리 저장소를 공유합니다.
         """
         standardized_past = self._convert_to_standard_cache(past, batch_size=len(beam_idx))
 
-        # Get a copy of `beam_idx` on all the devices where we need those indices.
+        # 필요한 모든 장치에서 `beam_idx`의 복사본을 가져옵니다.
         device_to_beam_idx = {
             past_state.device: beam_idx.to(past_state.device) for layer_past in past for past_state in layer_past
         }
@@ -830,7 +831,7 @@ class RWForSequenceClassification(RWPreTrainedModel):
         self.transformer = RWModel(config)
         self.score = nn.Linear(config.hidden_size, config.num_labels, bias=False)
 
-        # Initialize weights and apply final processing
+        # 가중치를 초기화하고 최종 처리를 적용합니다.
         self.post_init()
 
     def forward(
@@ -848,10 +849,10 @@ class RWForSequenceClassification(RWPreTrainedModel):
         **deprecated_arguments,
     ) -> Union[Tuple[torch.Tensor], SequenceClassifierOutputWithPast]:
         r"""
-        labels (`torch.LongTensor` of shape `(batch_size,)`, *optional*):
-            Labels for computing the sequence classification/regression loss. Indices should be in `[0, ...,
-            config.num_labels - 1]`. If `config.num_labels == 1` a regression loss is computed (Mean-Square loss), If
-            `config.num_labels > 1` a classification loss is computed (Cross-Entropy).
+        labels (`(batch_size,)` 형태의 `torch.LongTensor`, *optional*):
+            시퀀스 분류/회귀 손실을 계산하기 위한 라벨입니다. 인덱스는 `[0, ..., config.num_labels - 1]` 범위에 있어야 합니다.
+            `config.num_labels == 1`인 경우 회귀 손실(평균 제곱 손실)을 계산합니다.
+            `config.num_labels > 1`인 경우 분류 손실(교차 엔트로피 손실)을 계산합니다.
         """
         if deprecated_arguments.pop("position_ids", False) is not False:
             # `position_ids` could have been `torch.Tensor` or `None` so defaulting pop to `False` allows to detect if users were passing explicitly `None`
@@ -953,7 +954,7 @@ class RWForTokenClassification(RWPreTrainedModel):
         self.dropout = nn.Dropout(classifier_dropout)
         self.classifier = nn.Linear(config.hidden_size, config.num_labels)
 
-        # Initialize weights and apply final processing
+        # 가중치를 초기화하고 최종 처리를 적용합니다.
         self.post_init()
 
     def forward(
@@ -977,7 +978,8 @@ class RWForTokenClassification(RWPreTrainedModel):
             `config.num_labels > 1` a classification loss is computed (Cross-Entropy).
         """
         if deprecated_arguments.pop("position_ids", False) is not False:
-            # `position_ids` could have been `torch.Tensor` or `None` so defaulting pop to `False` allows to detect if users were passing explicitly `None`
+            # `position_ids`는 `torch.Tensor` 또는 `None`일 수 있으므로,
+            # 기본값으로 `False`를 설정하면 사용자가 명시적으로 `None`을 전달했는지 감지할 수 있습니다.             
             warnings.warn(
                 "`position_ids` have no functionality in BLOOM and will be removed in v5.0.0. You can safely ignore"
                 " passing `position_ids`.",
@@ -1030,7 +1032,7 @@ class RWForQuestionAnswering(RWPreTrainedModel):
         self.transformer = RWModel(config)
         self.qa_outputs = nn.Linear(config.hidden_size, 2)
 
-        # Initialize weights and apply final processing
+        # 가중치를 초기화하고 최종 처리를 적용합니다.
         self.post_init()
 
     def forward(
@@ -1047,14 +1049,12 @@ class RWForQuestionAnswering(RWPreTrainedModel):
         return_dict: Optional[bool] = None,
     ) -> Union[Tuple, QuestionAnsweringModelOutput]:
         r"""
-        start_positions (`torch.LongTensor` of shape `(batch_size,)`, *optional*):
-            Labels for position (index) of the start of the labelled span for computing the token classification loss.
-            Positions are clamped to the length of the sequence (`sequence_length`). Position outside of the sequence
-            are not taken into account for computing the loss.
-        end_positions (`torch.LongTensor` of shape `(batch_size,)`, *optional*):
-            Labels for position (index) of the end of the labelled span for computing the token classification loss.
-            Positions are clamped to the length of the sequence (`sequence_length`). Position outside of the sequence
-            are not taken into account for computing the loss.
+        start_positions (`(batch_size,)` 형태의 `torch.LongTensor`, *optional*):
+            토큰 분류 손실을 계산하기 위한 라벨의 시작 위치(인덱스)입니다. 위치는 시퀀스의 길이(`sequence_length`)로 클램핑됩니다.
+            시퀀스 밖의 위치는 손실 계산에 고려되지 않습니다.
+        end_positions (`(batch_size,)` 형태의 `torch.LongTensor`, *optional*):
+            토큰 분류 손실을 계산하기 위한 라벨의 끝 위치(인덱스)입니다. 위치는 시퀀스의 길이(`sequence_length`)로 클램핑됩니다.
+            시퀀스 밖의 위치는 손실 계산에 고려되지 않습니다.            
         """
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
@@ -1078,12 +1078,12 @@ class RWForQuestionAnswering(RWPreTrainedModel):
 
         total_loss = None
         if start_positions is not None and end_positions is not None:
-            # If we are on multi-GPU, split add a dimension
+            # 멀티 GPU를 사용할 경우, 차원을 나눕니다.
             if len(start_positions.size()) > 1:
                 start_positions = start_positions.squeeze(-1)
             if len(end_positions.size()) > 1:
                 end_positions = end_positions.squeeze(-1)
-            # sometimes the start/end positions are outside our model inputs, we ignore these terms
+            # 때때로 시작/끝 위치가 모델 입력 범위를 벗어나는 경우, 이러한 항목을 무시합니다.
             ignored_index = start_logits.size(1)
             start_positions = start_positions.clamp(0, ignored_index)
             end_positions = end_positions.clamp(0, ignored_index)

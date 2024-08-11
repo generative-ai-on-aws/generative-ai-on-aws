@@ -55,7 +55,7 @@ def memory_status(msg="", reset_max=True, sync=True):
     cached = torch.cuda.memory_reserved(device=local_rank)
     max_cached = torch.cuda.max_memory_reserved(device=local_rank)
 
-    # convert to GB for printing
+    # 출력을 위해 GB로 변환
     alloced /= 1024**3
     cached /= 1024**3
     max_alloced /= 1024**3
