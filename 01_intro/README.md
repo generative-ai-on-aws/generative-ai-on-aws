@@ -1,45 +1,45 @@
-# Chapter 1: Generative AI Use Cases, Fundamentals, and Project Life Cycle
+# 1장: 생성형 AI 활용 사례, 기본 사항 및 프로젝트 생명 주기
 [![](../img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-# Questions and Answers
+# 질문&답변
 
-_Q: What are some common use cases for Generative AI?_
+_Q: 생성형 AI의 일반적인 활용 사례는 무엇인가요?_
 
-A: Intelligent search, automated customer-support chatbots, dialog summarization, not-safe-for-work (NSFW) content moderation, personalized product videos, source code generation, and others.
+A: 지능형 검색, 자동화된 고객 지원 챗봇, 대화 요약, 부적절한(not-safe-for-work; NSFW) 콘텐츠 조정, 개인화된 제품 동영상, 소스 코드 생성 등이 있습니다.
 
-_Q: How do project life cycle phases impact Generative AI development?_
+_Q: 프로젝트 생명 주기 단계가 생성형 AI 개발에 어떤 영향을 미치나요?_
 
-A: The project life cycle includes stages like defining a use case, prompt engineering, selecting a foundation model, fine-tuning, aligning with human values, deploying the model, and integrating with external data sources, which impact generative AI development. 
+A: 프로젝트 생명 주기에는 활용 사례 정의, 프롬프트 엔지니어링, 파운데이션 모델 선택, 미세 조정, 인간의 가치관에 부합, 모델 배포, 외부 데이터 소스와 통합 등의 단계가 포함되며, 이는 생성형 AI 개발에 영향을 미칩니다. 
 
-_Q: How are foundation models and model hubs important in Generative AI?_
+_Q: 파운데이션 모델과 모델 허브가 생성형 AI에서 왜 중요한가요?_
 
-A: Foundation models are large and complex neural network models with billions of parameters, trained on massive data. Model hubs, like Hugging Face Model Hub, PyTorch Hub, or Amazon SageMaker JumpStart, offer a collection of models with detailed descriptions and use cases, providing a starting point for generative AI projects.
+A: 파운데이션 모델은 수십억 개의 매개변수로 구성된 매우 크고 복잡한 신경망 모델로 방대한 데이터로 학습됩니다. 허깅 페이스 모델 허브, 파이토치 허브, 아마존 세이지메이커 점프스타트와 같은 모델 허브는 자세한 설명과 활용 사례가 포함된 모델 컬렉션을 제공하여 생성형 AI 프로젝트의 시작점이 됩니다.
 
-_Q: Describe the Generative AI project life cycle?_
+_Q: 생성형 AI 프로젝트의 생명 주기를 설명해주세요._
 
-A: The generative AI project life cycle, though not definitive, guides through important parts of the application journey. It helps in gaining intuition, avoiding potential difficulties, and improving decision-making at each step.
+A: 생성형 AI 프로젝트의 명확한 생명 주기는 없지만, 이 프레임워크는 생성형 AI 애플리케이션 개발 과정에서 가장 중요한 부분을 안내합니다. 이를 통해 직관력을 키우고, 잠재적인 어려움을 피하는 법을 배우며, 개발 단계별로 의사 결정 능력을 향상할 수 있습니다.
 
-_Q: What makes AWS a suitable platform for building Generative AI foundation models?_
+_Q: AWS가 생성형 AI 파운데이션 모델을 구축하기에 적합한 플랫폼인 이유는 무엇인가요?_
 
-A: AWS offers a range of frameworks and infrastructure, including optimized compute instances for building foundation models, making it suitable for using generative AI with complex entities like human language, images, videos, and audio clips. 
+A: AWS는 파운데이션 모델을 구축하기 위한 다양한 프레임워크와 인프라를 제공하며, 여기에는 생성형 AI에 최적화된 컴퓨팅 인스턴스가 포함됩니다. 이를 통해 인간의 언어, 이미지, 비디오, 오디오 클립 같은 복잡한 개체를 다루는 생성형 AI를 사용하기에 적합합니다. 
 
-_Q: How does Generative AI on AWS differ from other platforms?_
+_Q: AWS의 생성형 AI가 다른 플랫폼과 어떻게 다른가요?_
 
-A: AWS offers increased flexibility, choice, enterprise-grade security, state-of-the-art generative AI capabilities, low operational overhead through fully managed services, and quick access to ready-to-use solutions. AWS allows developers and scientists to build scalable and secure generative AI applications quickly and safely. 
+A: AWS는 유연성과 선택의 폭 증대, 엔터프라이즈급 보안, 최신 생성형 AI 기능, 완전 관리형 서비스를 통한 낮은 운영 부담, 바로 사용할 수 있는 솔루션에 대한 빠른 접근을 제공합니다. AWS를 통해 개발자와 과학자들은 확장 가능하고 안전한 생성형 AI 애플리케이션을 빠르고 안전하게 구축할 수 있습니다. 
 
-# Chapters
-* [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
-* [Chapter 2](/02_prompt) - Prompt Engineering and In-Context Learning
-* [Chapter 3](/03_foundation) - Large-Language Foundation Models
-* [Chapter 4](/04_optimize) - Quantization and Distributed Computing
-* [Chapter 5](/05_finetune) - Fine-Tuning and Evaluation
-* [Chapter 6](/06_peft) - Parameter-efficient Fine Tuning (PEFT)
-* [Chapter 7](/07_rlhf) - Fine-tuning using Reinforcement Learning with RLHF
-* [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
-* [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
-* [Chapter 10](/10_multimodal) - Multimodal Foundation Models
-* [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
-* [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
+# 목차
+* [1장](/01_intro) - 생성형 AI 활용 사례, 기본 사항 및 프로젝트 생명 주기
+* [2장](/02_prompt) - 프롬프트 엔지니어링과 콘텍스트 내 학습
+* [3장](/03_foundation) - 대형 언어 파운데이션 모델
+* [4장](/04_optimize) - 양자화 및 분산 컴퓨팅
+* [5장](/05_finetune) - 미세 조정 및 평가
+* [6장](/06_peft) - 효율적인 매개변수 미세 조정 (PEFT)
+* [7장](/07_rlhf) - 인간 피드백을 통한 강화 학습으로 미세 조정
+* [8장](/08_deploy) - 생성형 AI 애플리케이션 최적화 및 배포
+* [9장](/09_rag) - 검색 증강 생성(RAG)과 에이전트
+* [10장](/10_multimodal) - 멀티모달 파운데이션 모델
+* [11장](/11_diffusers) - 스테이블 디퓨전을 통한 생성 제어와 미세 조정
+* [12장](/12_bedrock) - 아마존 베드록: 생성형 AI 관리형 서비스
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com
