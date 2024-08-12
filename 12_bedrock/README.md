@@ -1,49 +1,49 @@
-# Chapter 12:  Amazon Bedrock: Managed Service for Generative AI
+# 12장 아마존 베드록: 생성형 AI 관리형 서비스
 [![](../img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-# Questions and Answers
+# 질문&답변
 
-_Q: What are the key features of Amazon Bedrock for Generative AI?_
+_Q: 아마존 베드록의 생성형 AI 주요 기능은 무엇인가요?_
 
-A: Amazon Bedrock for Generative AI offers features such as retrieval-augmented generation, semantic-search, and agent-based use cases. It supports foundation models from Amazon and various third-party companies, which can be accessed through the AWS Console, CLI, or SDK. It allows for private customization of these foundation models using custom datasets.
+A: 아마존 베드록은 검색 증강 생성, 시맨틱 검색, 에이전트 기반 시나리오와 같은 기능을 제공합니다. 아마존과 다양한 타사 기업의 파운데이션 모델을 지원하며, 이는 AWS 관리 콘솔, CLI 또는 SDK를 통해 접근할 수 있습니다. 또한 사용자 정의 데이터 세트를 활용해 이러한 파운데이션 모델을 비공개로 사용자 정의할 수 있습니다.
 
-_Q: What are the benefits of using large language models such as Amazon Titan, Anthropic Claude, Cohere Command, Meta Llama2, and AI21 Jurassic within Amazon Bedrock?_
+_Q: 아마존 베드록 내의 아마존 타이탄, 앤트로픽 클로드, 코히어 커맨드, 메타 라마2, AI21 주라식과 같은 대규모 언어 모델을 사용하는 이점은 무엇인가요?_
 
-A: Large language models within Amazon Bedrock offer benefits such as advanced text generation and processing capabilities, which can be leveraged for tasks like generating SQL code, summarizing text, and creating embeddings. They are accessible for various generative AI applications and can be utilized through Bedrock's managed services and APIs.
+A: 아마존 베드록 내의 대규모 언어 모델은 고급 텍스트 생성 및 처리 기능을 제공하며, 이를 활용해 SQL 코드 생성, 텍스트 요약, 임베딩 생성과 같은 작업을 수행할 수 있습니다. 이러한 모델은 다양한 생성형 AI 애플리케이션에 접근할 수 있으며, 베드록의 관리형 서비스와 API를 통해 활용할 수 있습니다.
 
-_Q: What is the role of multimodal foundation models such as Stable Diffusion in Amazon Bedrock?_
+_Q: 아마존 베드록에서 스테이블 디퓨전과 같은 멀티모달 파운데이션 모델의 역할은 무엇인가요?_
 
-A: Stable Diffusion foundation models in Amazon Bedrock are used to generate unique, realistic, high-quality images, art, logos, and designs from text-based prompts. They play a critical role in multimodal content generation within the Bedrock ecosystem.
+A: 아마존 베드록의 스테이블 디퓨전 파운데이션 모델은 텍스트 기반 프롬프트를 활용해 독특하고 사실적이며 고품질의 이미지, 아트워크, 로고, 디자인을 생성하는 데 사용됩니다. 이 모델은 베드록 생태계 내에서 멀티모달 콘텐츠 생성에 중요한 역할을 합니다.
 
-_Q: How do Bedrock Inference APIs enhance Generative AI applications?_
+_Q: 베드록 추론 API는 어떻게 생성형 AI 애플리케이션을 향상시키나요?_
 
-A: Bedrock Inference APIs enhance Generative AI applications by enabling content generation using text-to-text models, text-to-image models, and embedding models. These APIs facilitate the integration of generative AI capabilities into various applications.
+A: 베드록 추론 API는 텍스트-텍스트 모델, 텍스트-이미지 모델, 임베딩 모델을 활용한 콘텐츠 생성을 가능하게 함으로써 생성형 AI 애플리케이션을 향상시킵니다. 이러한 API를 통해 다양한 애플리케이션에 생성형 AI 기능을 통합할 수 있습니다.
 
-_Q: What are the key considerations in fine-tuning models within Amazon Bedrock?_
+_Q: 아마존 베드록에서 모델을 미세 조정할 때 고려해야 할 주요 사항은 무엇인가요?_
 
-A: Key considerations in fine-tuning models within Amazon Bedrock include ensuring data privacy, using secure access methods, and customizing models for specific use cases. Fine-tuning involves configuring model inputs and outputs to remain private and secure within the user's environment.
+A: 아마존 베드록에서 모델을 미세 조정할 때 고려해야 할 주요 사항에는 데이터 프라이버시 보장, 안전한 접근 방식 사용, 특정 사용 사례에 맞는 모델 사용자 정의가 포함됩니다. 미세 조정 시 모델 입력과 출력이 사용자 환경 내에서 비공개로 안전하게 유지되도록 구성해야 합니다.
 
-_Q: What are the data privacy and network security mechanisms in Amazon Bedrock?_
+_Q: 아마존 베드록의 데이터 프라이버시와 네트워크 보안 메커니즘은 무엇인가요?_
 
-A: Amazon Bedrock's data privacy and network security measures include data isolation per AWS customer, encryption in transit and at rest, and secure connectivity via AWS VPC Endpoints. It adheres to GDPR and other data sovereignty regulations.
+A: 아마존 베드록의 데이터 프라이버시와 네트워크 보안 조치에는 AWS 고객별 데이터 분리, 전송 중 및 저장 데이터 암호화, AWS VPC 엔드포인트를 통한 안전한 연결이 포함됩니다. 또한 GDPR을 비롯한 데이터 주권 관련 규정을 준수합니다.
 
-_Q: How does Amazon Bedrock ensure effective governance and monitoring of Generative AI models?_
+_Q: 아마존 베드록은 어떻게 생성형 AI 모델의 효과적인 거버넌스와 모니터링을 보장하나요?_
 
-A: Amazon Bedrock ensures effective governance and monitoring of Generative AI models by tracking API activity and metrics using AWS CloudTrail and Amazon CloudWatch. This enables monitoring of model usage and performance within the user's AWS account.
+A: 아마존 베드록은 AWS 클라우드트레일과 아마존 클라우드워치를 활용해 API 활동과 지표를 추적함으로써 생성형 AI 모델의 효과적인 거버넌스와 모니터링을 보장합니다. 이를 통해 사용자의 AWS 계정 내에서 모델 사용량과 성능을 모니터링할 수 있습니다.
 
-# Chapters
-* [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
-* [Chapter 2](/02_prompt) - Prompt Engineering and In-Context Learning
-* [Chapter 3](/03_foundation) - Large-Language Foundation Models
-* [Chapter 4](/04_optimize) - Quantization and Distributed Computing
-* [Chapter 5](/05_finetune) - Fine-Tuning and Evaluation
-* [Chapter 6](/06_peft) - Parameter-efficient Fine Tuning (PEFT)
-* [Chapter 7](/07_rlhf) - Fine-tuning using Reinforcement Learning with RLHF
-* [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
-* [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
-* [Chapter 10](/10_multimodal) - Multimodal Foundation Models
-* [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
-* [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
+# 목차
+* [1장](/01_intro) - 생성형 AI 활용 사례, 기본 사항 및 프로젝트 생명 주기
+* [2장](/02_prompt) - 프롬프트 엔지니어링과 콘텍스트 내 학습
+* [3장](/03_foundation) - 대형 언어 파운데이션 모델
+* [4장](/04_optimize) - 양자화 및 분산 컴퓨팅
+* [5장](/05_finetune) - 미세 조정 및 평가
+* [6장](/06_peft) - 효율적인 매개변수 미세 조정 (PEFT)
+* [7장](/07_rlhf) - 인간 피드백을 통한 강화 학습으로 미세 조정
+* [8장](/08_deploy) - 생성형 AI 애플리케이션 최적화 및 배포
+* [9장](/09_rag) - 검색 증강 생성(RAG)과 에이전트
+* [10장](/10_multimodal) - 멀티모달 파운데이션 모델
+* [11장](/11_diffusers) - 스테이블 디퓨전을 통한 생성 제어와 미세 조정
+* [12장](/12_bedrock) - 아마존 베드록: 생성형 AI 관리형 서비스
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com
