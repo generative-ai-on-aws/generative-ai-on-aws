@@ -1,48 +1,48 @@
-# Chapter 11:  Controlled Generation and Fine-Tuning with Stable Diffusion
+# 11장 스테이블 디퓨전을 통한 생성 제어와 미세 조정
 [![](../img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-# Questions and Answers
-_Q: What is ControlNet, and how is it used in stable diffusion?_
+# 질문&답변
+_Q: ControlNet이란 무엇이며, 스테이블 디퓨전에서 어떻게 사용되나요?_
 
-A: ControlNet is a deep neural network that works with diffusion models like Stable Diffusion. During training, a control learns a specific task such as edge-detection or depth-mapping from a set of given inputs. It is used to train various controls that improve image-based generative tasks with a relatively small amount of data.
+A: ControlNet은 스테이블 디퓨전과 같은 확산 모델과 함께 작동하도록 설계된 심층 신경망입니다. 학습 중에 컨트롤은 주어진 입력 집합에서 윤곽선 검출이나 깊이 매핑 같은 특정 작업을 학습합니다. 비교적 적은 데이터만으로도 이미지 기반 생성 작업을 개선하는 다양한 컨트롤을 학습하는 데 사용됩니다.
 
-_Q: How does DreamBooth contribute to fine-tuning in stable diffusion?_
+_Q: 드림부스는 스테이블 디퓨전의 미세 조정에 어떻게 기여하나요?_
 
-A: DreamBooth allows fine-tuning of a Stable Diffusion model using just a few images. It supports property modification and accessorization, allowing you to modify specific aspects of the input image, like color, or to preserve the subject but modify the image with accessories.
+A: 드림부스를 사용하면 단 몇 장의 이미지만으로 스테이블 디퓨전 모델을 미세 조정할 수 있습니다. 속성 변경과 액세서리 착용 기능을 지원하여 색상과 같은 입력 이미지의 특정 측면을 수정하거나 피사체는 유지하면서 액세서리로 이미지를 수정할 수 있습니다.
 
-_Q: What is textual inversion, and how does it relate to fine-tuning?_
+_Q: Textual Inversion이란 무엇이며, 미세 조정과 어떤 관련이 있나요?_
 
-A: Textual inversion is a lightweight fine-tuning technique used to personalize image-based generative models with just a few images. It works by learning a token embedding for a new text-based token representing a concept while keeping the remaining components of the Stable Diffusion model frozen.
+A: Textual Inversion은 소수의 이미지만으로 이미지 기반 생성 모델을 개인 맞춤화하는 데 활용되는 비교적 가벼운 미세 조정 기법입니다. 스테이블 디퓨전 모델의 나머지 구성 요소는 그대로 두고 특정 개념을 나타내는 새로운 텍스트 기반 토큰의 임베딩을 학습하는 방식으로 작동합니다.
 
-_Q: How does human alignment with RLHF enhance stable diffusion models?_
+_Q: RLHF를 통한 인간 가치 정렬은 어떻게 스테이블 디퓨전 모델을 향상시키나요?_
 
-A: Human Alignment with Reinforcement Learning from Human Feedback (RLHF) can fine-tune diffusion models to improve aspects like image compressibility, aesthetic quality, and prompt-image alignment. RLHF aligns multimodal models to generate content that is more helpful, honest, and harmless.
+A: 인간 피드백을 통한 강화 학습(RLHF)을 활용해 확산 모델을 미세 조정하면 이미지 압축률, 심미적 품질, 프롬프트와 이미지의 일치도 등을 개선할 수 있습니다. RLHF는 멀티모달 모델을 정렬해 더 유용하고 정직하며 무해한(HHH) 콘텐츠를 생성하는 데 활용됩니다.
 
-_Q: How do PEFT-LoRA techniques aid in fine-tuning stable diffusion models?"_
+_Q: PEFT-LoRA 기법은 스테이블 디퓨전 모델의 미세 조정에 어떤 도움을 주나요?_
 
-A: PEFT-LoRA (Parameter-Efficient Fine-Tuning with Low-Rank Adaptation) can be used to fine-tune the cross-attention layers of Stable Diffusion models. It provides an efficient way to adapt these models without the need for large-scale retraining.
+A: PEFT-LoRA(효율적인 매개변수 미세 조정을 위한 저순위 적응)는 스테이블 디퓨전 모델의 교차 어텐션 레이어를 미세 조정하는 데 사용될 수 있습니다. 대규모 재학습 없이 이러한 모델을 효율적으로 조정할 수 있는 방법을 제공합니다.
 
-_Q: What are the benefits of fine-tuning Stable Diffusion models?_
+_Q: 스테이블 디퓨전 모델을 미세 조정하는 것의 이점은 무엇인가요?_
 
-A: Fine-tuning Stable Diffusion models allows customization of image generation to include image data not captured in the original corpus of training data. This can include any image data such as images of people, pets, or logos, enabling the generation of realistic images that include subjects unknown to the base model.
+A: 스테이블 디퓨전 모델을 미세 조정하면 원래 학습 데이터에 없던 이미지 데이터를 활용해 이미지 생성 방식을 개인에 맞게 조정할 수 있습니다. 여기에는 사람, 반려동물, 로고 같은 모든 이미지 데이터가 포함될 수 있으며, 기존 학습 데이터에 없던 새로운 피사체를 포함하는 사실적인 이미지를 생성할 수 있습니다.
 
-_Q: How does fine-tuning with stable diffusion models differ from other generative AI models?_
+_Q: 스테이블 디퓨전 모델의 미세 조정은 다른 생성형 AI 모델과 어떻게 다른가요?_
 
-A: Fine-tuning techniques for diffusion models like Stable Diffusion are similar to those used for transformer-based large language models (LLMs). These techniques allow customization of image generation to include specific data sets or themes, similar to how LLMs are fine-tuned to align with specific textual data or styles.
+A: 스테이블 디퓨전과 같은 확산 모델의 미세 조정 기법은 트랜스포머 기반 대규모 언어 모델(LLM)의 미세 조정 기법과 유사합니다. 이러한 기법을 사용하면 LLM을 특정 텍스트 데이터나 스타일에 맞게 조정하는 것처럼, 특정 데이터 세트나 주제를 포함하도록 이미지 생성을 사용자 정의할 수 있습니다.
 
-# Chapters
-* [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
-* [Chapter 2](/02_prompt) - Prompt Engineering and In-Context Learning
-* [Chapter 3](/03_foundation) - Large-Language Foundation Models
-* [Chapter 4](/04_optimize) - Quantization and Distributed Computing
-* [Chapter 5](/05_finetune) - Fine-Tuning and Evaluation
-* [Chapter 6](/06_peft) - Parameter-efficient Fine Tuning (PEFT)
-* [Chapter 7](/07_rlhf) - Fine-tuning using Reinforcement Learning with RLHF
-* [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
-* [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
-* [Chapter 10](/10_multimodal) - Multimodal Foundation Models
-* [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
-* [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
+# 목차
+* [1장](/01_intro) - 생성형 AI 활용 사례, 기본 사항 및 프로젝트 생명 주기
+* [2장](/02_prompt) - 프롬프트 엔지니어링과 콘텍스트 내 학습
+* [3장](/03_foundation) - 대형 언어 파운데이션 모델
+* [4장](/04_optimize) - 메모리와 연산 최적화
+* [5장](/05_finetune) - 미세 조정 및 평가
+* [6장](/06_peft) - 효율적인 매개변수 미세 조정(PEFT)
+* [7장](/07_rlhf) - 인간 피드백을 통한 강화 학습으로 미세 조정(RLHF)
+* [8장](/08_deploy) - 모델 배포 최적화
+* [9장](/09_rag) - RAG와 에이전트를 활용한 맥락 인식 추론 애플리케이션
+* [10장](/10_multimodal) - 멀티모달 파운데이션 모델
+* [11장](/11_diffusers) - 스테이블 디퓨전을 통한 생성 제어와 미세 조정
+* [12장](/12_bedrock) - 아마존 베드록: 생성형 AI 관리형 서비스
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com

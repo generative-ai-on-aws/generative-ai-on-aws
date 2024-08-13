@@ -1,44 +1,44 @@
-# Chapter 4: Memory and Compute Optimizations
+# 4장 메모리와 연산 최적화
 [![](../img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-# Questions and Answers
-_Q: What are the primary memory challenges in Generative AI models?_
+# 질문&답변
+_Q: 생성형 AI 모델의 주요 메모리 문제는 무엇인가요?_
 
-A: The primary memory challenges in Generative AI models, especially those with multibillion parameters, include hitting the limits of GPU RAM.
+A: 생성형 AI 모델, 특히 수십억 개의 매개변수를 가진 모델의 주요 메모리 문제는 GPU RAM의 한계에 도달하는 것입니다.
 
-_Q: What is the role of quantization in optimizing models?_
+_Q: 모델 최적화에서 양자화의 역할은 무엇인가요?_
 
-A: Quantization plays a crucial role in optimizing models by reducing the memory required to load and train models. It involves converting model parameters from higher precision (like 32-bit) to lower precision (like 16-bit or 8-bit), which reduces memory usage and improves training performance and cost efficiency.
+A: 양자화는 모델을 적재하고 학습하는 데 필요한 메모리를 줄여 모델을 최적화하는 데 중요한 역할을 합니다. 이는 모델 매개변수를 높은 정밀도(예: 32비트)에서 낮은 정밀도(예: 16비트 또는 8비트)로 변환하는 것을 포함하며, 이를 통해 메모리 사용량을 줄이고 학습 성능을 향상시키며 비용 효율성을 높입니다.
 
-_Q: Can you explain FlashAttention and Grouped-Query Attention?_
+_Q: 플래시 어텐션과 그룹 쿼리 어텐션에 대해 설명해 주시겠습니까?_
 
-A: FlashAttention aims to reduce the quadratic compute and memory requirements of the self-attention layers in Transformer-based models, enhancing performance by decreasing the amount of memory reads and writes. Grouped-Query Attention (GQA) improves upon traditional multiheaded attention by sharing a single key and value head for each group of query heads, reducing memory consumption and improving performance, especially beneficial for longer input sequences. 
+A: 플래시 어텐션은 트랜스포머 기반 모델의 셀프 어텐션 레이어에서 제곱 연산량과 메모리 요구 사항을 줄이는 것을 목표로 하며, 메모리 읽기와 쓰기 양을 줄여 성능을 향상시킵니다. 그룹 쿼리 어텐션(GQA)은 각 쿼리 헤드 그룹별로 단일 키와 값 헤드를 공유함으로써 기존 멀티 헤드 어텐션을 개선하여 메모리 소비를 줄이고 성능을 향상시키며, 특히 긴 입력 시퀀스에 유용합니다. 
 
-_Q: What are the benefits of distributed computing in Generative AI?_
+_Q: 생성형 AI에서 분산 컴퓨팅의 이점은 무엇인가요?_
 
-A: Distributed computing offers significant benefits for training large Generative AI models. It allows for the training of massive models across many GPUs, increasing GPU utilization and cost efficiency. Distributed computing patterns like Distributed Data Parallel (DDP) and Fully Sharded Data Parallel (FSDP) facilitate the training of large models by efficiently managing memory and computational resources across multiple GPUs.
+A: 분산 컴퓨팅은 대규모 생성형 AI 모델 학습에 상당한 이점을 제공합니다. 이를 통해 여러 GPU에 걸쳐 대규모 모델을 학습할 수 있어 GPU 사용률과 비용 효율성이 향상됩니다. 분산 데이터 병렬(DDP)과 완전 샤드 데이터 병렬(FSDP) 같은 분산 컴퓨팅 패턴은 여러 GPU에 걸쳐 메모리와 연산 자원을 효율적으로 관리하여 대규모 모델의 학습을 용이하게 합니다.
 
-_Q: How do Distributed Data Parallel and Fully Sharded Data Parallel differ?_
+_Q: 분산 데이터 병렬과 완전 샤드 데이터 병렬은 어떻게 다른가요?_
 
-A: Distributed Data Parallel (DDP) involves copying the entire model onto each GPU and processing data in parallel, suitable when a single GPU can hold the entire model. Fully Sharded Data Parallel (FSDP), inspired by ZeRO, shards the model across GPUs, reducing memory requirements per GPU. It dynamically reconstructs layers for computations, making it suitable for models too large for a single GPU.
+A: 분산 데이터 병렬(DDP)은 전체 모델을 각 GPU에 복사하고 데이터를 병렬로 처리하며, 단일 GPU가 전체 모델을 수용할 수 있을 때 적합합니다. ZeRO에서 영감을 받은 완전 샤드 데이터 병렬(FSDP)은 모델을 GPU에 걸쳐 분할하여 GPU당 메모리 요구 사항을 줄입니다. FSDP는 연산을 위해 레이어를 동적으로 재구성하므로 단일 GPU에 너무 큰 모델에 적합합니다.
 
-_Q: How do memory and compute optimizations affect model scalability and efficiency?_
+_Q: 메모리와 연산 최적화는 모델의 확장성과 효율성에 어떤 영향을 미치나요?_
 
-A: Memory and compute optimizations greatly enhance model scalability and efficiency. Techniques like quantization reduce memory requirements, allowing larger models to be trained on existing hardware. Distributed computing methods, such as DDP and FSDP, enable efficient training of large models across multiple GPUs, improving scalability and overall resource utilization.
+A: 메모리와 연산 최적화는 모델의 확장성과 효율성을 크게 향상시킵니다. 양자화와 같은 기술은 메모리 요구 사항을 줄여 기존 하드웨어에서 더 큰 모델을 학습할 수 있게 합니다. DDP와 FSDP 같은 분산 컴퓨팅 방법을 통해 여러 GPU에 걸쳐 대규모 모델을 효율적으로 학습할 수 있어 확장성과 전반적인 자원 활용도가 개선됩니다.
 
-# Chapters
-* [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
-* [Chapter 2](/02_prompt) - Prompt Engineering and In-Context Learning
-* [Chapter 3](/03_foundation) - Large-Language Foundation Models
-* [Chapter 4](/04_optimize) - Quantization and Distributed Computing
-* [Chapter 5](/05_finetune) - Fine-Tuning and Evaluation
-* [Chapter 6](/06_peft) - Parameter-efficient Fine Tuning (PEFT)
-* [Chapter 7](/07_rlhf) - Fine-tuning using Reinforcement Learning with RLHF
-* [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
-* [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
-* [Chapter 10](/10_multimodal) - Multimodal Foundation Models
-* [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
-* [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
+# 목차
+* [1장](/01_intro) - 생성형 AI 활용 사례, 기본 사항 및 프로젝트 생명 주기
+* [2장](/02_prompt) - 프롬프트 엔지니어링과 콘텍스트 내 학습
+* [3장](/03_foundation) - 대형 언어 파운데이션 모델
+* [4장](/04_optimize) - 메모리와 연산 최적화
+* [5장](/05_finetune) - 미세 조정 및 평가
+* [6장](/06_peft) - 효율적인 매개변수 미세 조정(PEFT)
+* [7장](/07_rlhf) - 인간 피드백을 통한 강화 학습으로 미세 조정(RLHF)
+* [8장](/08_deploy) - 모델 배포 최적화
+* [9장](/09_rag) - RAG와 에이전트를 활용한 맥락 인식 추론 애플리케이션
+* [10장](/10_multimodal) - 멀티모달 파운데이션 모델
+* [11장](/11_diffusers) - 스테이블 디퓨전을 통한 생성 제어와 미세 조정
+* [12장](/12_bedrock) - 아마존 베드록: 생성형 AI 관리형 서비스
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com

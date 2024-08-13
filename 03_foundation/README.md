@@ -1,53 +1,53 @@
-# Chapter 3: Large-Language Foundation Models
+# 3장 대형 언어 파운데이션 모델
 [![](../img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-# Questions and Answers
+# 질문&답변
 
-_Q: What are large-language foundation models?_
+_Q: 대형 언어 파운데이션 모델이란 무엇인가요?_
 
-A: Large-language foundation models are generative AI models trained on vast amounts of public data from the internet across various languages and topics. They have a deep understanding of human language and extensive knowledge across many domains within their parameters.
+A: 대형 언어 파운데이션 모델은 다양한 언어와 주제를 다루는 인터넷 공개 데이터로 학습된 생성형 AI 모델입니다. 이 모델은 인간 언어에 대한 탄탄한 이해는 물론 다양한 영역에 걸친 방대한 양의 지식을 매개변수 내에 구축했습니다.
 
-_Q: Why are pretraining datasets important in model development?_
+_Q: 모델 개발에서 사전 학습 데이터 세트가 중요한 이유는 무엇인가요?_
 
-A: Pretraining datasets are crucial as they provide the bulk of data (often terabytes or petabytes) that a generative model learns from. Popular datasets include Wikipedia and Common Crawl.
+A: 사전 학습 데이터 세트는 생성 모델이 학습하는 대부분의 데이터(주로 테라바이트나 페타바이트 규모)를 제공하기 때문에 매우 중요합니다. 널리 사용되는 데이터 세트로는 Wikipedia와 Common Crawl이 있습니다.
 
-_Q: How do tokenizers function in these models?_
+_Q: 이러한 모델에서 토크나이저는 어떻게 작동하나요?_
 
-A: Tokenizers in these models convert human-readable text into a vector of token_ids, where each token_id represents a token in the model’s vocabulary. This numeric representation of tokens forms the basis for further processing by the model.
+A: 이러한 모델의 토크나이저는 사람이 읽을 수 있는 텍스트를 token_ids 벡터로 변환하며, 각 token_id는 모델 어휘의 토큰을 나타냅니다. 이러한 토큰의 수치 표현은 모델의 추가 처리를 위한 기초가 됩니다.
 
-_Q: What is the significance of embedding vectors in large-language models?_
+_Q: 대형 언어 모델에서 임베딩 벡터의 중요성은 무엇인가요?_
 
-A: Embedding vectors in large-language models are crucial as they represent any entity (text, images, videos, audio) in a high-dimensional vector space. They encode the meaning and context of tokens for the model to understand human language and semantic similarity of words.
+A: 대형 언어 모델의 임베딩 벡터는 모든 유형의 개체(텍스트, 이미지, 비디오, 오디오)를 매우 높은 차원의 벡터 공간에 투영하기 때문에 매우 중요합니다. 이는 모델이 인간의 언어를 이해하고 단어의 의미적 유사성을 파악할 수 있도록 토큰의 의미와 맥락을 인코딩합니다.
 
-_Q: Can you describe the transformer architecture used in these models?_
+_Q: 이러한 모델에서 사용되는 트랜스포머 아키텍처를 설명해 주시겠습니까?_
 
-A: The Transformer architecture, central to modern language models like BERT and GPT, consists of an input token context window, embeddings, encoder self-attention layers, decoder, and softmax outputs. It's used for generating model completions to input prompts and gaining contextual understanding of language during pretraining and fine-tuning.
+A: BERT와 GPT 같은 최근 언어 모델의 핵심인 트랜스포머 아키텍처는 입력 토큰 콘텍스트 윈도, 임베딩, 인코더 셀프 어텐션 레이어, 디코더, 소프트맥스 출력으로 구성됩니다. 이는 입력 프롬프트에 대한 모델 컴플리션 생성을 돕고 사전 학습과 미세 조정 중에 언어의 맥락적 이해를 얻는 데 사용됩니다.
 
-_Q: How do input and context windows affect model performance?_
+_Q: 입력과 콘텍스트 윈도는 모델 성능에 어떤 영향을 미치나요?_
 
-A: The input and context window sizes, defining the number of tokens a model can process at once, significantly affect performance. The window size influences the model's capacity to understand and generate contextually rich text. Modern sizes are measured in the 100,000's.
+A: 모델이 한 번에 처리할 수 있는 토큰 수를 정의하는 입력 및 콘텍스트 윈도 크기는 성능에 큰 영향을 미칩니다. 윈도 크기는 모델이 맥락이 풍부한 텍스트를 이해하고 생성하는 능력에 영향을 줍니다. 최신 모델의 크기는 100,000단위로 측정됩니다.
 
-_Q: What are scaling laws in the context of large-language models?_
+_Q: 대형 언어 모델의 맥락에서 스케일링 법칙이란 무엇인가요?_
 
-A: Scaling laws describe the relationship between model size, dataset size, and compute budget for generative models. They suggest that increasing the number of tokens or model parameters enhances performance, but this requires a higher compute budget, often measured in floating point operations per second (FLOPs).
+A: 스케일링 법칙은 생성 모델의 모델 크기, 데이터 세트 크기, 컴퓨팅 예산 간의 관계를 설명합니다. 이는 토큰 수나 모델 매개변수 수를 늘림으로써 성능을 향상할 수 있음을 시사하지만, 이를 위해서는 일반적으로 초당 부동소수점 연산(FLOPs)으로 정의되는 더 높은 컴퓨팅 예산이 필요합니다.
 
-_Q: What challenges do large-language models face in terms of computational resources?_
+_Q: 대형 언어 모델이 직면한 컴퓨팅 자원 관련 과제는 무엇인가요?_
 
-A: Large generative models face challenges like GPU memory limitations and distributed-computing overhead. Strategies like quantization to reduce memory requirements and distributed computing techniques like fully sharded data parallel (FSDP) are used to efficiently scale model training across multiple GPUs.
+A: 대규모 생성 모델은 GPU 메모리 제한과 분산 컴퓨팅으로 인한 추가적 계산 부담 등의 과제에 직면합니다. 이러한 문제를 해결하기 위해 메모리 요구량을 줄이는 양자화와 완전 샤딩 데이터 병렬화(FSDP)와 같은 분산 컴퓨팅 전략을 활용해 여러 GPU에서 모델 학습을 효율적으로 확장하는 방법 등이 사용됩니다.
 
-# Chapters
-* [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
-* [Chapter 2](/02_prompt) - Prompt Engineering and In-Context Learning
-* [Chapter 3](/03_foundation) - Large-Language Foundation Models
-* [Chapter 4](/04_optimize) - Quantization and Distributed Computing
-* [Chapter 5](/05_finetune) - Fine-Tuning and Evaluation
-* [Chapter 6](/06_peft) - Parameter-efficient Fine Tuning (PEFT)
-* [Chapter 7](/07_rlhf) - Fine-tuning using Reinforcement Learning with RLHF
-* [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
-* [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
-* [Chapter 10](/10_multimodal) - Multimodal Foundation Models
-* [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
-* [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
+# 목차
+* [1장](/01_intro) - 생성형 AI 활용 사례, 기본 사항 및 프로젝트 생명 주기
+* [2장](/02_prompt) - 프롬프트 엔지니어링과 콘텍스트 내 학습
+* [3장](/03_foundation) - 대형 언어 파운데이션 모델
+* [4장](/04_optimize) - 메모리와 연산 최적화
+* [5장](/05_finetune) - 미세 조정 및 평가
+* [6장](/06_peft) - 효율적인 매개변수 미세 조정(PEFT)
+* [7장](/07_rlhf) - 인간 피드백을 통한 강화 학습으로 미세 조정(RLHF)
+* [8장](/08_deploy) - 모델 배포 최적화
+* [9장](/09_rag) - RAG와 에이전트를 활용한 맥락 인식 추론 애플리케이션
+* [10장](/10_multimodal) - 멀티모달 파운데이션 모델
+* [11장](/11_diffusers) - 스테이블 디퓨전을 통한 생성 제어와 미세 조정
+* [12장](/12_bedrock) - 아마존 베드록: 생성형 AI 관리형 서비스
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com

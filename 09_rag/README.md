@@ -1,57 +1,57 @@
-# Chapter 9: Context-Aware Reasoning Applications using RAG and Agents
+# 9장 RAG와 에이전트를 활용한 맥락 인식 추론 애플리케이션
 [![](../img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-# Questions and Answers
+# 질문&답변
 
-_Q: What limitations do large language models face in context-aware reasoning?_
+_Q: 대규모 언어 모델이 맥락 인식 추론에서 직면하는 한계는 무엇인가요?_
 
-A: Large language models (LLMs) face challenges in having accurate and current knowledge, leading to issues like hallucination and knowledge cutoff.
+A: 대규모 언어 모델(LLM)은 정확하고 최신의 지식을 유지하는 데 어려움을 겪고 있어 환각과 지식 단절과 같은 문제로 이어집니다.
 
-_Q: How does hallucination and knowledge cutoff impact model accuracy?_
+_Q: 환각과 지식 단절은 모델의 정확성에 어떤 영향을 미치나요?_
 
-A: Hallucination leads to the generation of incorrect or irrelevant information, while knowledge cutoff limits the model's understanding to information available up to a certain date, impacting the accuracy of responses.
+A: 환각은 부정확하거나 관련 없는 정보를 생성하게 하고, 지식 단절은 모델이 특정 날짜까지의 정보만 이해하도록 제한해 응답의 정확성에 영향을 미칩니다.
 
-_Q: What is retrieval-augmented generation (RAG), and how does it work?_
+_Q: 검색 증강 생성(RAG)이란 무엇이며 어떻게 작동하나요?_
 
-A: RAG is a framework that provides LLMs access to data they did not see during training. It overcomes knowledge limitations by allowing LLM-powered applications to use external data sources.
+A: RAG는 LLM이 학습 중에 접하지 않은 데이터에 접근할 수 있도록 해주는 프레임워크입니다. LLM 기반 애플리케이션이 외부 데이터 소스를 활용할 수 있게 함으로써 지식의 한계를 극복합니다.
 
-_Q: How do external sources of knowledge contribute to RAG?_
+_Q: 외부 지식 소스는 RAG에 어떻게 기여하나요?_
 
-A: External sources of knowledge in RAG provide additional data not contained within the LLM's parametric memory, helping to mitigate issues like hallucination and knowledge cutoff.
+A: RAG의 외부 지식 소스는 LLM의 파라메트릭 메모리에 포함되지 않은 추가 데이터를 제공하여 환각과 지식 단절 같은 문제를 완화하는 데 도움을 줍니다.
 
-_Q: What is the significance of document loading and chunking in RAG?_
+_Q: RAG에서 문서 로딩과 청킹의 중요성은 무엇인가요?_
 
-A: Document loading and chunking are important in RAG for organizing and processing external data, making it accessible for the model to enhance its knowledge base and reasoning capabilities".
+A: 문서 로딩과 청킹은 RAG에서 외부 데이터를 조직하고 처리하는 데 중요하며, 이를 통해 모델이 지식 기반과 추론 능력을 강화하는 데 접근할 수 있게 합니다.
 
-_Q: Can you explain the RAG workflow and its implementation?_
+_Q: RAG 워크플로와 그 구현에 대해 설명해 주시겠어요?_
 
-A: The RAG workflow involves integrating external data sources with LLMs, using processes like document loading, chunking, and retrieval-augmented methods to enhance the model's responses with additional, relevant information.
+A: RAG 워크플로는 외부 데이터 소스를 LLM과 통합하는 과정으로, 문서 로딩, 청킹, 검색 증강 방법 등을 활용해 추가적이고 관련성 있는 정보로 모델의 응답을 강화합니다.
 
-_Q: What are the key considerations in developing context-aware reasoning applications?_
+_Q: 맥락 인식 추론 애플리케이션을 개발할 때 주요 고려 사항은 무엇인가요?_
 
-A: Key considerations include managing the accuracy of knowledge, updating information regularly, and integrating external data sources effectively to address hallucination and knowledge cutoff issues.
+A: 주요 고려 사항에는 지식의 정확성 관리, 정기적인 정보 업데이트, 환각과 지식 단절 문제를 해결하기 위한 외부 데이터 소스의 효과적인 통합 등이 있습니다.
 
-_Q: How does embedding vector store and retrieval affect RAG's performance?_
+_Q: 임베딩 벡터 저장소와 검색은 RAG의 성능에 어떤 영향을 미치나요?_
 
-A: Embedding vector storage and retrieval are crucial in RAG for efficiently managing and accessing relevant external data, which significantly enhances the model's performance by providing additional context and information.
+A: 임베딩 벡터 저장과 검색은 RAG에서 관련 외부 데이터를 효율적으로 관리하고 접근하는 데 중요하며, 추가적인 맥락과 정보를 제공함으로써 모델의 성능을 크게 향상시킵니다.
 
-_Q: What are some effective strategies for reranking with maximum marginal relevance?_
+_Q: 최대 한계 관련성을 활용한 순위 재정렬의 효과적인 전략은 무엇인가요?_
 
-A: Effective strategies include using algorithms that prioritize relevance and diversity in the retrieval results, ensuring that the most pertinent and varied information is presented in response to queries.
+A: 효과적인 전략에는 검색 결과의 관련성과 다양성을 우선시하는 알고리즘을 활용하여 질의에 대해 가장 적절하고 다양한 정보가 제시되도록 하는 것이 포함됩니다.
 
-# Chapters
-* [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
-* [Chapter 2](/02_prompt) - Prompt Engineering and In-Context Learning
-* [Chapter 3](/03_foundation) - Large-Language Foundation Models
-* [Chapter 4](/04_optimize) - Quantization and Distributed Computing
-* [Chapter 5](/05_finetune) - Fine-Tuning and Evaluation
-* [Chapter 6](/06_peft) - Parameter-efficient Fine Tuning (PEFT)
-* [Chapter 7](/07_rlhf) - Fine-tuning using Reinforcement Learning with RLHF
-* [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
-* [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
-* [Chapter 10](/10_multimodal) - Multimodal Foundation Models
-* [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
-* [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
+# 목차
+* [1장](/01_intro) - 생성형 AI 활용 사례, 기본 사항 및 프로젝트 생명 주기
+* [2장](/02_prompt) - 프롬프트 엔지니어링과 콘텍스트 내 학습
+* [3장](/03_foundation) - 대형 언어 파운데이션 모델
+* [4장](/04_optimize) - 메모리와 연산 최적화
+* [5장](/05_finetune) - 미세 조정 및 평가
+* [6장](/06_peft) - 효율적인 매개변수 미세 조정(PEFT)
+* [7장](/07_rlhf) - 인간 피드백을 통한 강화 학습으로 미세 조정(RLHF)
+* [8장](/08_deploy) - 모델 배포 최적화
+* [9장](/09_rag) - RAG와 에이전트를 활용한 맥락 인식 추론 애플리케이션
+* [10장](/10_multimodal) - 멀티모달 파운데이션 모델
+* [11장](/11_diffusers) - 스테이블 디퓨전을 통한 생성 제어와 미세 조정
+* [12장](/12_bedrock) - 아마존 베드록: 생성형 AI 관리형 서비스
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com

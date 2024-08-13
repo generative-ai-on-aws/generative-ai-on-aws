@@ -1,57 +1,57 @@
-# Chapter 2: Prompt Engineering and In-Context Learning
+# 2장 프롬프트 엔지니어링과 콘텍스트 내 학습
 [![](../img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-# Questions and Answers
+# 질문&답변
 
-_Q: How do prompts and completions work in Generative AI?_
+_Q: 생성형 AI에서 프롬프트와 컴플리션은 어떻게 작동하나요?_
 
-A: Prompts in Generative AI involve text-based input, including instructions, context, and constraints for a task. The AI model responds with a 'completion' that could be text, image, video, or audio, depending on the model's training.
+A: 생성형 AI의 프롬프트는 작업에 필요한 인스트럭션, 콘텍스트, 제약 조건을 포함하는 텍스트 기반 입력입니다. AI 모델은 모델 학습에 따라 텍스트, 이미지, 비디오, 오디오 등이 될 수 있는 '컴플리션'으로 응답합니다.
 
-_Q: What role do tokens play in prompt engineering?_
+_Q: 프롬프트 엔지니어링에서 토큰은 어떤 역할을 하나요?_
 
-A: In prompt engineering, tokens are crucial as generative models convert text-based prompts and completions into sequences of tokens or word fragments. These tokens represent words and enable the model to process and generate language-based responses.
+A: 프롬프트 엔지니어링에서 토큰은 매우 중요합니다. 생성 모델은 텍스트 기반 프롬프트와 컴플리션을 토큰 또는 단어 조각 순서로 변환합니다. 이러한 토큰은 단어를 나타내며 모델이 언어 기반 응답을 처리하고 생성할 수 있게 합니다.
 
-_Q: Can you explain the concept of prompt structure?_
+_Q: 프롬프트 구조의 개념을 설명해 주시겠습니까?_
 
-A: Prompt structure typically includes instruction, context, input data, and output indicator. Effective prompt engineering involves creating a prompt structure that guides the model towards the desired output, with clarity, specificity, and context.
+A: 프롬프트 구조는 일반적으로 인스트럭션, 콘텍스트, 입력 데이터, 출력 표시자를 포함합니다. 효과적인 프롬프트 엔지니어링은 명확성, 구체성, 콘텍스트를 갖춘 프롬프트 구조를 만들어 모델이 원하는 출력을 생성하도록 유도하는 것입니다.
 
-_Q: What is in-context learning in Generative AI?_
+_Q: 생성형 AI에서 콘텍스트 내 학습이란 무엇인가요?_
 
-A: In-context learning in Generative AI involves passing multiple prompt-completion pairs along with the prompt input. This technique temporarily alters the model's behavior for that request, encouraging it to respond in ways similar to the examples provided in the context.
+A: 생성형 AI의 콘텍스트 내 학습은 프롬프트 입력과 함께 여러 프롬프트-컴플리션 쌍을 전달하는 것을 포함합니다. 이 기법은 해당 요청에 대해 모델의 동작을 일시적으로 변경하여, 콘텍스트에 제공된 예시와 유사한 방식으로 응답하도록 유도합니다.
 
-_Q: How does few-shot inference differ from zero-shot and one-shot inference?_
+_Q: 퓨샷 추론은 제로샷 및 원샷 추론과 어떻게 다른가요?_
 
-A: Few-shot inference involves providing multiple examples within the prompt context for the model to learn from. In contrast, one-shot inference uses a single example, and zero-shot inference uses no examples, relying on the model's preexisting knowledge and generalization capabilities.
+A: 퓨샷 추론은 모델이 학습할 수 있도록 프롬프트 콘텍스트 내에 여러 예시를 제공하는 것입니다. 반면 원샷 추론은 단일 예시를 사용하고, 제로샷 추론은 예시를 사용하지 않고 모델의 기존 지식과 일반화 능력에 의존합니다.
 
-_Q: What are some best practices for in-context learning?_
+_Q: 콘텍스트 내 학습의 모범 사례는 무엇인가요?_
 
-A: For effective in-context learning, start with zero-shot inference and progress to one-shot or few-shot if needed. Ensure the mix of examples is consistent and appropriate for the task. The context shouldn't exceed the model's input size or context window.
+A: 효과적인 콘텍스트 내 학습을 위해서는 제로샷 추론으로 시작하고 필요에 따라 원샷 또는 퓨샷 추론으로 진행하세요. 예시의 조합이 작업에 일관되고 적절한지 확인하세요. 콘텍스트가 모델의 입력 크기나 콘텍스트 윈도를 초과하지 않도록 해야 합니다.
 
-_Q: What are some effective prompt-engineering techniques?_
+_Q: 효과적인 프롬프트 엔지니어링 기법에는 어떤 것들이 있나요?_
 
-A: Effective prompt-engineering techniques include being clear and concise, being creative, moving the instruction to the end of the prompt for longer texts, clearly conveying the subject, using explicit directives, avoiding negative formulations, including context and few-shot examples, specifying response size, and providing a specific response format.
+A: 효과적인 프롬프트 엔지니어링 기법에는 명확하고 간결하게 작성하기, 창의력 발휘하기, 긴 텍스트의 경우 인스트럭션을 프롬프트 끝으로 이동하기, 주제를 명확하게 전달하기, 명시적 지시문 사용하기, 부정적 표현 피하기, 콘텍스트와 퓨샷 예시 포함하기, 응답 크기 지정하기, 구체적인 응답 형식 제공하기 등이 있습니다.
 
-_Q: What inference configuration parameters are critical in prompt engineering?_
+_Q: 프롬프트 엔지니어링에서 중요한 추론 구성 매개변수는 무엇인가요?_
 
-A: Critical inference configuration parameters in prompt engineering include temperature and top k, which control the model's creativity in generating content.
+A: 프롬프트 엔지니어링에서 중요한 추론 구성 매개변수에는 콘텐츠 생성 시 모델의 창의성을 제어하는 temperature와 top-k가 포함됩니다.
 
-_Q: How does prompt structure affect the performance of a Generative AI model?_
+_Q: 프롬프트 구조는 생성형 AI 모델의 성능에 어떤 영향을 미치나요?_
 
-A: Prompt structure affects a Generative AI model's performance by guiding it towards the desired output.
+A: 프롬프트 구조는 생성형 AI 모델이 원하는 출력을 생성하도록 유도함으로써 모델의 성능에 영향을 미칩니다.
 
-# Chapters
-* [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
-* [Chapter 2](/02_prompt) - Prompt Engineering and In-Context Learning
-* [Chapter 3](/03_foundation) - Large-Language Foundation Models
-* [Chapter 4](/04_optimize) - Quantization and Distributed Computing
-* [Chapter 5](/05_finetune) - Fine-Tuning and Evaluation
-* [Chapter 6](/06_peft) - Parameter-efficient Fine Tuning (PEFT)
-* [Chapter 7](/07_rlhf) - Fine-tuning using Reinforcement Learning with RLHF
-* [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
-* [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
-* [Chapter 10](/10_multimodal) - Multimodal Foundation Models
-* [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
-* [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
+# 목차
+* [1장](/01_intro) - 생성형 AI 활용 사례, 기본 사항 및 프로젝트 생명 주기
+* [2장](/02_prompt) - 프롬프트 엔지니어링과 콘텍스트 내 학습
+* [3장](/03_foundation) - 대형 언어 파운데이션 모델
+* [4장](/04_optimize) - 메모리와 연산 최적화
+* [5장](/05_finetune) - 미세 조정 및 평가
+* [6장](/06_peft) - 효율적인 매개변수 미세 조정(PEFT)
+* [7장](/07_rlhf) - 인간 피드백을 통한 강화 학습으로 미세 조정(RLHF)
+* [8장](/08_deploy) - 모델 배포 최적화
+* [9장](/09_rag) - RAG와 에이전트를 활용한 맥락 인식 추론 애플리케이션
+* [10장](/10_multimodal) - 멀티모달 파운데이션 모델
+* [11장](/11_diffusers) - 스테이블 디퓨전을 통한 생성 제어와 미세 조정
+* [12장](/12_bedrock) - 아마존 베드록: 생성형 AI 관리형 서비스
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com

@@ -1,52 +1,52 @@
-# Chapter 5: Fine-tuning and Evaluation
+# 5장 미세 조정 및 평가
 [![](../img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-# Questions and Answers
-_Q: What is instruction fine-tuning in Generative AI?_
+# 질문&답변
+_Q: 생성형 AI에서 인스트럭션 미세 조정이란 무엇인가요?_
 
-A: Instruction fine-tuning involves adapting a pre-trained model to respond to instructions in natural language, enhancing its ability to understand and execute specific tasks described in human language. This targeted training improves the model's understanding and response to relevant instructions, leading to better task-specific outcomes. 
+A: 인스트럭션 미세 조정은 사전 학습된 모델을 자연어 인스트럭션에 응답하도록 조정하여 인간의 언어로 설명된 특정 작업을 이해하고 실행하는 능력을 향상시키는 과정입니다. 이러한 목표 지향적 학습은 모델의 관련 인스트럭션 이해와 응답 능력을 개선하여 작업별 결과를 향상시킵니다. 
 
-_Q: What is an instruction dataset, and how is it used?_
+_Q: 인스트럭션 데이터 세트란 무엇이며 어떻게 사용되나요?_
 
-A: An instruction dataset contains examples of tasks described in natural language instructions along with the desired outputs.
+A: 인스트럭션 데이터 세트는 자연어 인스트럭션으로 설명된 작업의 예시와 원하는 출력을 포함하고 있습니다.
 
-_Q: How can custom datasets be converted into instruction datasets?_
+_Q: 사용자 정의 데이터 세트를 어떻게 인스트럭션 데이터 세트로 변환할 수 있나요?_
 
-A: Custom datasets can be converted into instruction datasets by creating natural language descriptions of the tasks or queries that the data can help answer, along with the corresponding correct outputs. This process involves designing templates or prompts that mimic the format of instructions and responses.
+A: 사용자 정의 데이터 세트는 데이터가 답변할 수 있는 작업이나 질문에 대한 자연어 설명과 해당하는 정확한 출력을 만들어 인스트럭션 데이터 세트로 변환할 수 있습니다. 이 과정에는 인스트럭션과 응답의 형식을 모방하는 템플릿이나 프롬프트를 설계하는 것이 포함됩니다.
 
-_Q: What are the key evaluation metrics for fine-tuned models?_
+_Q: 미세 조정된 모델의 주요 평가 지표는 무엇인가요?_
 
-A: The key evaluation metrics for fine-tuned models in Generative AI include accuracy, precision, recall, F1 score, and other task-specific metrics. These metrics assess how well the model performs on the tasks it was fine-tuned for.
+A: 생성형 AI에서 미세 조정된 모델의 주요 평가 지표에는 정확도, 정밀도, 리콜, F1 점수 및 기타 작업별 지표가 포함됩니다. 이러한 지표는 모델이 미세 조정된 작업을 얼마나 잘 수행하는지 평가합니다.
 
-_Q: How do benchmarks and datasets contribute to model evaluation?_
+_Q: 벤치마크와 데이터 세트는 모델 평가에 어떻게 기여하나요?_
 
-A: Benchmarks and datasets provide standardized tasks and metrics for evaluating the performance of models. They enable fair and consistent comparisons between different models and help in understanding the strengths and weaknesses of each model.
+A: 벤치마크와 데이터 세트는 모델 성능을 평가하기 위한 표준화된 작업과 지표를 제공합니다. 이를 통해 서로 다른 모델 간의 공정하고 일관된 비교가 가능하며 각 모델의 강점과 약점을 이해하는 데 도움이 됩니다.
 
-_Q: What are the differences in fine-tuning techniques for various models?_
+_Q: 다양한 모델의 미세 조정 기법에는 어떤 차이가 있나요?_
 
-A: Fine-tuning techniques can vary based on the model architecture, the nature of the task, the size of the dataset, and the specific goals of fine-tuning. Techniques can range from full model training to more parameter-efficient fine-tuning (PEFT) methods that use adapter modules.
+A: 미세 조정 기법은 모델 아키텍처, 작업의 특성, 데이터 세트의 크기, 미세 조정의 구체적인 목표에 따라 다를 수 있습니다. 기법은 전체 모델 학습부터 어댑터 모듈을 사용하는 더욱 효율적인 매개변수 미세 조정(PEFT) 방법까지 다양합니다.
 
-_Q: How does fine-tuning impact the performance and accuracy of Generative AI models?_
+_Q: 미세 조정은 생성형 AI 모델의 성능과 정확도에 어떤 영향을 미치나요?_
 
-A: Fine-tuning enhances the performance and accuracy of Generative AI models by tailoring them to specific tasks or domains. This targeted training improves the model's understanding and response to relevant instructions, leading to better task-specific outcomes. 
+A: 미세 조정은 생성형 AI 모델을 특정 작업이나 도메인에 맞춤화함으로써 성능과 정확도를 향상시킵니다. 이러한 목표 지향적 학습은 모델의 관련 인스트럭션 이해와 응답 능력을 개선하여 작업별 결과를 향상시킵니다. 
 
-_Q: What are some common challenges in fine-tuning Generative AI models?_
+_Q: 생성형 AI 모델을 미세 조정할 때 흔히 발생하는 문제는 무엇인가요?_
 
-A: Common challenges in fine-tuning Generative AI models include managing the risk of catastrophic forgetting, balancing generalization with specialization, ensuring data quality and relevance, and handling the computational and resource demands of training large models.
+A: 생성형 AI 모델을 미세 조정할 때 흔히 발생하는 문제에는 파괴적 망각의 위험 관리, 일반화와 특수화 간의 균형 유지, 데이터 품질과 관련성 보장, 대규모 모델 학습에 따른 계산 및 리소스 요구 사항 처리 등이 있습니다.
 
-# Chapters
-* [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
-* [Chapter 2](/02_prompt) - Prompt Engineering and In-Context Learning
-* [Chapter 3](/03_foundation) - Large-Language Foundation Models
-* [Chapter 4](/04_optimize) - Quantization and Distributed Computing
-* [Chapter 5](/05_finetune) - Fine-Tuning and Evaluation
-* [Chapter 6](/06_peft) - Parameter-efficient Fine Tuning (PEFT)
-* [Chapter 7](/07_rlhf) - Fine-tuning using Reinforcement Learning with RLHF
-* [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
-* [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
-* [Chapter 10](/10_multimodal) - Multimodal Foundation Models
-* [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
-* [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
+# 목차
+* [1장](/01_intro) - 생성형 AI 활용 사례, 기본 사항 및 프로젝트 생명 주기
+* [2장](/02_prompt) - 프롬프트 엔지니어링과 콘텍스트 내 학습
+* [3장](/03_foundation) - 대형 언어 파운데이션 모델
+* [4장](/04_optimize) - 메모리와 연산 최적화
+* [5장](/05_finetune) - 미세 조정 및 평가
+* [6장](/06_peft) - 효율적인 매개변수 미세 조정(PEFT)
+* [7장](/07_rlhf) - 인간 피드백을 통한 강화 학습으로 미세 조정(RLHF)
+* [8장](/08_deploy) - 모델 배포 최적화
+* [9장](/09_rag) - RAG와 에이전트를 활용한 맥락 인식 추론 애플리케이션
+* [10장](/10_multimodal) - 멀티모달 파운데이션 모델
+* [11장](/11_diffusers) - 스테이블 디퓨전을 통한 생성 제어와 미세 조정
+* [12장](/12_bedrock) - 아마존 베드록: 생성형 AI 관리형 서비스
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com

@@ -1,57 +1,57 @@
-# Chapter 7: Reinforcement Learning from Human Feedback (RLHF)
+# 7: 인간 피드백을 통한 강화 학습으로 미세 조정(RLHF)
 [![](../img/gaia_book_cover_sm.png)](https://www.amazon.com/Generative-AI-AWS-Multimodal-Applications/dp/1098159225/)
 
-# Questions and Answers
+# 질문&답변
 
-_Q: What is the concept of human alignment in the context of reinforcement learning?_
+_Q: 강화 학습 맥락에서 인간 가치 정렬의 개념은 무엇인가요?_
 
-A: Human alignment in reinforcement learning is the process of aligning the outputs of a model with human values and preferences, ensuring the model's outputs are helpful, honest, and harmless.
+A: 강화 학습에서 인간 가치 정렬은 모델의 출력을 인간의 가치와 선호에 맞추는 과정으로, 모델의 출력이 유용성, 정직성, 무해성을 갖도록 보장합니다.
 
-_Q: How does reinforcement learning contribute to Generative AI model fine-tuning?_
+_Q: 강화 학습은 생성형 AI 모델 미세 조정에 어떻게 기여하나요?_
 
-A: Reinforcement learning from human feedback (RLHF) fine-tunes a generative model by modifying its underlying weights to better align with human preferences, as expressed through a reward model.
+A: 인간 피드백을 통한 강화 학습(RLHF)은 보상 모델을 통해 표현된 인간 선호도에 더 잘 부합하도록 생성 모델의 기본 가중치를 수정하여 미세 조정합니다.
 
-_Q: How does human-in-the-loop influence model training?_
+_Q: 휴먼인더루프는 모델 학습에 어떤 영향을 미치나요?_
 
-A: Human-in-the-loop influences model training by providing human feedback, where human annotators rank various completions for a given prompt, creating multiple rows of training data for each prompt.
+A: 휴먼인더루프는 인간 피드백을 제공하여 모델 학습에 영향을 미칩니다. 여기서 레이블러가 주어진 프롬프트에 대한 여러 컴플리션의 순위를 매겨 프롬프트당 여러 개의 학습 데이터 행을 생성합니다.
 
-_Q: What steps are involved in training a custom reward model?_
+_Q: 맞춤형 보상 모델을 학습하는 데 어떤 단계가 포함되나요?_
 
-A: To train a custom reward model, the first step is to collect human feedback on what is helpful, honest, and harmless. This typically involves using a managed service like Amazon SageMaker Ground Truth to collect data from human annotators. 
+A: 맞춤형 보상 모델을 학습하는 첫 번째 단계는 무엇이 유용하고, 정직하며, 무해한지에 대한 데이터를 사람으로부터 수집하는 것입니다. 이 과정은 일반적으로 아마존 세이지메이커 그라운드 트루스와 같은 관리형 서비스를 활용하여 레이블러로부터 데이터를 수집합니다.
 
-_Q: What is the role of Amazon SageMaker Ground Truth in training reward models?_
+_Q: 보상 모델 학습에서 아마존 세이지메이커 그라운드 트루스의 역할은 무엇인가요?_
 
-A: Amazon SageMaker Ground Truth is used to collect data from human labelers, allowing them to rank completions for a given prompt, which is critical for training reward models.
+A: 아마존 세이지메이커 그라운드 트루스는 레이블러로부터 데이터를 수집하는 데 사용됩니다. 레이블러가 주어진 프롬프트에 대한 컴플리션의 순위를 매기도록 하여 보상 모델 학습에 중요한 데이터를 수집합니다.
 
-_Q: How does the toxicity detector by Meta function as a reward model?_
+_Q: 메타의 유해성 판독기는 보상 모델로 어떻게 기능하나요?_
 
-A: The toxicity detector by Meta, based on RoBERTa, functions as a reward model by predicting the probability distribution across two classes—'not hate' or 'hate'—for a given text input.
+A: RoBERTa 기반의 메타 유해성 판독기는 주어진 텍스트 입력에 대해 '혐오 아님' 또는 '혐오'라는 두 클래스의 확률 분포를 예측하여 보상 모델로 기능합니다.
 
-_Q: How does the Proximal Policy Optimization algorithm aid in RLHF?_
+_Q: 근접 정책 최적화 알고리즘은 RLHF에 어떻게 도움이 되나요?_
 
-A: The Proximal Policy Optimization (PPO) algorithm aids in RLHF by updating the weights of the generative model based on the reward value returned from the reward model, optimizing the policy to generate completions aligned with human values.
+A: 근접 정책 최적화(PPO) 알고리즘은 보상 모델에서 반환된 보상 값에 따라 생성 모델의 가중치를 업데이트하여 RLHF를 돕습니다. 이를 통해 인간의 가치에 부합하는 컴플리션을 생성하도록 정책을 최적화합니다.
 
-_Q: How can reward hacking be mitigated in RLHF?_
+_Q: RLHF에서 보상 해킹을 어떻게 완화할 수 있나요?_
 
-A: Reward hacking in RLHF can be mitigated by using a copied model with frozen weights as a reference. The RLHF-tuned model's completions are compared with this reference model using KL divergence to quantify and control divergence.
+A: RLHF에서 보상 해킹은 가중치를 고정한 복사 모델을 참조 모델로 사용하여 완화할 수 있습니다. RLHF로 조정된 모델의 컴플리션과 이 참조 모델을 KL 발산을 사용해 비교하여 차이를 정량화하고 제어합니다.
 
-_Q: What methods are used to evaluate RLHF fine-tuned models?_
+_Q: RLHF로 미세 조정된 모델을 평가하는 데 어떤 방법이 사용되나요?_
 
-A: RLHF fine-tuned models are evaluated using both qualitative and quantitative evaluation techniques, which involve comparing prompt completions before and after RLHF. Often, a toxicity detector is used to evaluate the model with a toxicity prompt-completion dataset like RealToxicityPrompts from the AllenAI Institute.
+A: RLHF로 미세 조정된 모델은 정성적, 정량적 평가 기법을 통해 평가됩니다. 여기에는 RLHF 적용 전후의 프롬프트 컴플리션을 비교하는 것이 포함됩니다. 종종 AllenAI 연구소의 RealToxicityPrompts와 같은 유해성 프롬프트-컴플리션 데이터 세트와 함께 유해성 판독기를 사용하여 모델을 평가합니다.
 
-# Chapters
-* [Chapter 1](/01_intro) - Generative AI Use Cases, Fundamentals, Project Lifecycle
-* [Chapter 2](/02_prompt) - Prompt Engineering and In-Context Learning
-* [Chapter 3](/03_foundation) - Large-Language Foundation Models
-* [Chapter 4](/04_optimize) - Quantization and Distributed Computing
-* [Chapter 5](/05_finetune) - Fine-Tuning and Evaluation
-* [Chapter 6](/06_peft) - Parameter-efficient Fine Tuning (PEFT)
-* [Chapter 7](/07_rlhf) - Fine-tuning using Reinforcement Learning with RLHF
-* [Chapter 8](/08_deploy) - Optimize and Deploy Generative AI Applications
-* [Chapter 9](/09_rag) - Retrieval Augmented Generation (RAG) and Agents
-* [Chapter 10](/10_multimodal) - Multimodal Foundation Models
-* [Chapter 11](/11_diffusers) - Controlled Generation and Fine-Tuning with Stable Diffusion
-* [Chapter 12](/12_bedrock) - Amazon Bedrock Managed Service for Generative AI
+# 목차
+* [1장](/01_intro) - 생성형 AI 활용 사례, 기본 사항 및 프로젝트 생명 주기
+* [2장](/02_prompt) - 프롬프트 엔지니어링과 콘텍스트 내 학습
+* [3장](/03_foundation) - 대형 언어 파운데이션 모델
+* [4장](/04_optimize) - 메모리와 연산 최적화
+* [5장](/05_finetune) - 미세 조정 및 평가
+* [6장](/06_peft) - 효율적인 매개변수 미세 조정(PEFT)
+* [7장](/07_rlhf) - 인간 피드백을 통한 강화 학습으로 미세 조정(RLHF)
+* [8장](/08_deploy) - 모델 배포 최적화
+* [9장](/09_rag) - RAG와 에이전트를 활용한 맥락 인식 추론 애플리케이션
+* [10장](/10_multimodal) - 멀티모달 파운데이션 모델
+* [11장](/11_diffusers) - 스테이블 디퓨전을 통한 생성 제어와 미세 조정
+* [12장](/12_bedrock) - 아마존 베드록: 생성형 AI 관리형 서비스
 
 # Related Resources
 * YouTube Channel: https://youtube.generativeaionaws.com
