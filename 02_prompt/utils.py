@@ -37,8 +37,8 @@ def llama_guard(query,
         print(f"model: {model}")
         print("Input is wrapped in [INST] [/INST] tags")
 
-    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용합니다.
-    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환합니다.
+    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용.
+    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환.
     wait_seconds = [base**i for i in range(max_tries)]
 
     for num_tries in range(max_tries):
@@ -84,8 +84,8 @@ def safe_llama(query, add_inst=True,
       "safety_model": safety_model
     }
 
-    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용합니다.
-    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환합니다.
+    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용.
+    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환.
     wait_seconds = [base**i for i in range(max_tries)]
 
     for num_tries in range(max_tries):
@@ -132,8 +132,8 @@ def code_llama(prompt,
             "max_tokens": max_tokens
         }
 
-    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용합니다.
-    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환합니다.
+    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용.
+    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환.
     wait_seconds = [base**i for i in range(max_tries)]
 
     for num_tries in range(max_tries):
@@ -157,7 +157,7 @@ def code_llama(prompt,
 
 # 20은 최소 새 토큰 수, 
 # 이는 입력 프롬프트의 최대 토큰 수를 허용합니다: 4097 - 20 = 4077
-# 그러나 max_tokens는 추력 토큰 수를 제한합니다.
+# 그러나 max_tokens는 출력 토큰 수를 제한합니다.
 # 입력 프롬프트 토큰 수 + max_tokens (응답 토큰 수)의 합은 4097을 초과할 수 없습니다.
 def llama(prompt, 
           add_inst=True, 
@@ -184,8 +184,8 @@ def llama(prompt,
             "max_tokens": max_tokens
         }
 
-    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용합니다.
-    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환합니다.    
+    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용.
+    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환.    
     wait_seconds = [base**i for i in range(max_tries)]
 
     for num_tries in range(max_tries):
@@ -221,8 +221,8 @@ def llama_chat(prompts,
 
     prompt = get_prompt_chat(prompts,responses)
 
-    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용합니다.
-    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환합니다.
+    # API 호출 시에 장애가 발생한다면 여러 번 호출 허용.
+    # 3회 호출 시도가 모두 실패한 후에 제공된 응답을 사용자에게 반환.
     wait_seconds = [base**i for i in range(max_tries)]
 
     for num_tries in range(max_tries):
